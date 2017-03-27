@@ -1,10 +1,13 @@
 from django.shortcuts import render
 
 def login(request):
-     return render(request, 'login/login_page.html')
+     return render(request, 'home/login_page.html')
 
 def success(request):
-     return render(request, 'login/success.html')
+     return render(request, 'home/success.html')
 
 def register(request):
-	return render(request, 'login/register.html')
+	return render(request, 'home/register.html')
+
+def forgot(request):
+	return render(request, 'home/forgot_pwd.html')
