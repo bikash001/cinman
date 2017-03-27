@@ -5,7 +5,7 @@
 <head>
 	<title>Login</title>
 	<link rel="stylesheet" type="text/css" href="{% static 'bootstrap.min.css' %}"/>
-	<link rel="stylesheet" type="text/css" href="{% static 'login/css/login.css' %}"/>
+	<link rel="stylesheet" type="text/css" href="{% static 'home/css/home.css' %}"/>
 </head>
 <body>
 <div class="container">
@@ -29,7 +29,7 @@
 	    	</div>
 	    	<div class="pad-top">
 	    		<span class="color-white">Not registered yet?</span>
-	    		<a href="{% url 'login:register' %}" class="pointer pad-left color-blue">Register</a>
+	    		<a href="{% url 'home:register' %}" class="pad-left color-blue">Register</a>
 	    	</div>
 		</div>
 		<div class="col-md-4"></div>

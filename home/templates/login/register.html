@@ -5,7 +5,7 @@
 <head>
 	<title>Signup</title>
 	<link rel="stylesheet" type="text/css" href="{% static 'bootstrap.min.css' %}"/>
-	<link rel="stylesheet" type="text/css" href="{% static 'login/css/login.css' %}"/>
+	<link rel="stylesheet" type="text/css" href="{% static 'home/css/home.css' %}"/>
 </head>
 <body>
 <div class="container">
@@ -37,8 +37,9 @@
 		        	<button type="submit" class="btn btn-primary btn-block btn-large">Sign up</button>
 		    	</div>
 		    </form>
-		    <div style="padding-top: 10px; color:blue; padding-left: 10px; cursor: pointer;">
-	    		Log in
+		    <div class="pad-top">
+	    		<span class="color-white">Already have account?</span>
+	    		<a href="{% url 'home:login' %}" class="pad-left color-blue">Login</a>
 	    	</div>
 		</div>
 		</div>
