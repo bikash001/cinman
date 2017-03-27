@@ -5,3 +5,6 @@ def login(request):
 
 def success(request):
      return render(request, 'login/success.html')
+
+def register(request):
+	return render(request, 'login/register.html')

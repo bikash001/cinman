@@ -1,0 +1,49 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Signup</title>
+	<link rel="stylesheet" type="text/css" href="{% static 'bootstrap.min.css' %}"/>
+	<link rel="stylesheet" type="text/css" href="{% static 'login/css/login.css' %}"/>
+</head>
+<body>
+<div class="container">
+	<div class="row">
+		<div class="col-md-4"></div>
+		<div class="col-md-4 text-center">
+		<div class="signup">
+			<h1 class="header">Register</h1>
+		    <form method="post">
+		    	<div>
+		    		<input type="text" name="fname" placeholder="First Name" required="required" />
+		    	</div>
+		    	<div>
+		    		<input type="text" name="lname" placeholder="Last Name" required="required" />
+		    	</div>
+		    	<div>
+		    		<input type="email" name="email" placeholder="Email" required="required" />
+		    	</div>
+		    	<div>
+		    		<input type="number" name="mobile" placeholder="Mobile" required="required" />
+		    	</div>
+		    	<div>
+		        	<input type="password" name="passwd" placeholder="Password" required="required" />
+		        </div>
+		    	<div>
+		        	<input type="password" name="cpasswd" placeholder="Confirm Password" required="required" />
+		        </div>
+		        <div>
+		        	<button type="submit" class="btn btn-primary btn-block btn-large">Sign up</button>
+		    	</div>
+		    </form>
+		    <div style="padding-top: 10px; color:blue; padding-left: 10px; cursor: pointer;">
+	    		Log in
+	    	</div>
+		</div>
+		</div>
+		<div class="col-md-4"></div>
+	</div>
+</div>
+</body>
+</html>

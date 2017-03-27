@@ -20,7 +20,14 @@ body {
 	width:300px;
 	height:300px;
 }
-.login h1 { color: #fff; text-shadow: 0 0 10px rgba(0,0,0,0.3); letter-spacing:1px; text-align:center; }
+.header { color: #fff; text-shadow: 0 0 10px rgba(0,0,0,0.3); letter-spacing:1px; text-align:center; }
+
+.signup {
+	max-width:300px;
+	max-height:300px;
+	margin: auto;
+}
+
 
 input { 
 	width: 100%; 

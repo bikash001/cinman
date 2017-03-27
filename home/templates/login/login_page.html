@@ -3,16 +3,16 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title></title>
+	<title>Login</title>
 	<link rel="stylesheet" type="text/css" href="{% static 'bootstrap.min.css' %}"/>
-	<link rel="stylesheet" type="text/css" href="{% static 'login/login.css' %}"/>
+	<link rel="stylesheet" type="text/css" href="{% static 'login/css/login.css' %}"/>
 </head>
 <body>
 <div class="container">
 	<div class="row">
 		<div class="col-md-4"></div>
 		<div class="col-md-4 text-center login">
-			<h1>Login</h1>
+			<h1 class="header">Login</h1>
 		    <form method="post">
 		    	<div>
 		    		<input type="text" name="u" placeholder="Email" required="required" />
@@ -29,7 +29,7 @@
 	    	</div>
 	    	<div class="pad-top">
 	    		<span class="color-white">Not registered yet?</span>
-	    		<span class="pointer pad-left color-blue">Register</span>
+	    		<a href="{% url 'login:register' %}" class="pointer pad-left color-blue">Register</a>
 	    	</div>
 		</div>
 		<div class="col-md-4"></div>
