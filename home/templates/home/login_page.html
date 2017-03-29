@@ -14,15 +14,21 @@
 		<div class="col-md-4"></div>
 		<div class="col-md-4 text-center login">
 			<h1 class="header">Login</h1>
-		    <form method="post">
+		    <form method="post" action="home/validateUser/">
+		    	{% csrf_token %}
 		    	<div>
-		    		<input type="text" name="u" placeholder="Email" required="required" />
+		    		<input type="text" name="uname" placeholder="Username" required="required" />
 		    	</div>
 		    	<div>
-		        	<input type="password" name="p" placeholder="Password" required="required" />
+		        	<input type="password" name="pwd" placeholder="Password" required="required" />
 		        </div>
+		        {% if failed_login %}
+		        <div class="text-center" style="color: red; padding-bottom: 5px;">
+		        	Incorrect Password.
+		        </div>
+		        {% endif %}
 		        <div>
-		        	<button type="submit" class="btn btn-primary btn-block btn-large">Let me in.</button>
+		        	<button id="login-btn" type="submit" class="btn btn-primary btn-block btn-large">Let me in.</button>
 		    	</div>
 		    </form>
 		    <div class="color-red pad-top">
