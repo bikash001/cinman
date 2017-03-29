@@ -11,3 +11,6 @@ def register(request):
 
 def forgot(request):
 	return render(request, 'home/forgot_pwd.html')
+
+def home(request):
+	return render(request, 'home/home.html')
