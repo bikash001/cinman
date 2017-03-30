@@ -10,6 +10,10 @@ urlpatterns = [
     url(r'^forgot_pwd$', views.forgot, name='forgot'),
     url(r'^validateUser/', views.validateUser),
     url(r'^home$', views.home, name='home'),
+    url(r'^home/messages$', views.messages, name='messages'),
     url(r'^logout$', views.logout),
+    url(r'^home/messages/(?P<machine_id>[0-9]+)/$',views.messagedetails,name='messagedetails'),
+    url(r'^home/notifications$', views.notifications, name='notifications'),
+    url(r'^home/systemstats$', views.systemstats, name='systemstats'),
     # url(r'^$', views.login, name='login'),
 ]

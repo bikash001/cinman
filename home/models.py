@@ -17,6 +17,9 @@ class Machine(models.Model):
     os_name=models.CharField(max_length=20)
     os_version=models.CharField(max_length=25)
 
+    def __str__(self):
+        return self.ip_address
+
 class Softwaresinstalled(models.Model):
     machine=models.ForeignKey(Machine, null=False, blank=False, related_name="softwares_installed")
     name=models.CharField(max_length=25)
@@ -36,6 +39,9 @@ class Peripherals(models.Model):
 class MachineUser(models.Model):
     username=models.CharField(max_length=30)
     last_login_time=models.DateTimeField()
+
+    def __str__(self):
+        return self.username
 
 class UsersActiveOn(models.Model):
     username=models.ForeignKey(MachineUser,related_name="active_users")
@@ -66,11 +72,14 @@ class Logs(models.Model):
     type=models.IntegerField(choices=TYPE_CHOICES)
 
 class Messages(models.Model):
-    session=models.ForeignKey(Session,related_name="message_session")#fill
+    #session=models.ForeignKey(Session,related_name="message_session")#fill
     username=models.ForeignKey(MachineUser,related_name="user_messages")
     machine=models.ForeignKey(Machine,related_name="machine_messages")
     content=models.CharField(max_length=100)
     time=models.DateTimeField()
+
+    def __str__(self):
+        return str(self.username) + " "+str(self.time) +"\n"+str(self.content) 
 
 class Administrator(models.Model):
     username=models.CharField(max_length=30)

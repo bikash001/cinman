@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import Administrator
+from .models import Administrator,Messages,Machine
 validation=False
 def direct(request):
 	return redirect('/login')
@@ -11,6 +11,45 @@ def register(request):
 
 def forgot(request):
 	return render(request, 'home/forgot_pwd.html')
+
+def messages(request):
+	if(validation==True):
+		machines=Machine.objects.all()
+		context={
+			'machines':machines, 
+		}
+		return render(request, 'home/messages.html',context)
+	else:
+		return redirect('/login')
+
+def messagedetails(request,machine_id):
+	if(validation==True):
+		messages=Messages.objects.filter(machine=machine_id).order_by('-time')
+		machines=Machine.objects.all()
+		machine_id=int(machine_id)
+		context={
+			'machines':machines,
+			'messages':messages,
+			'machine_id':machine_id, 
+		}
+		return render(request, 'home/messagedetails.html',context)
+	else:
+		return redirect('/login')
+
+def notifications(request):
+	global validation
+	if(validation==True):
+	   return render(request, 'home/notifications.html')
+	else:
+		return redirect('/login')
+
+def systemstats(request):
+	global validation
+	if(validation==True):
+	   return render(request, 'home/systemstats.html')
+	else:
+		return redirect('/login')
+
 
 def home(request):
 	global validation
@@ -40,3 +79,12 @@ def logout(request):
 	global validation
 	validation=False
 	return redirect('/login')
+
+def getmessages(ip_addr):
+	machine_id=Machine.objects.get(ip_address=ip_addr)
+	messages=Messages.objects.filter(machine=machine_id).order_by('time')
+	return messages
+
+def getip():
+	machine=Machine.objects.all()
+	return machine.ip_address

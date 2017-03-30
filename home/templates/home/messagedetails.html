@@ -1,0 +1,44 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title>messages</title>
+	<link rel="stylesheet" type="text/css" href="{% static 'bootstrap.min.css' %}"/>
+	<link rel="stylesheet" type="text/css" href="{% static 'base.css' %}"/>
+</head>
+<body>
+<div class="container">
+	<div class="row">
+		<div class="col-md-12">
+			<nav class="navbar navbar-inverse" style="margin-top: 10px; background: #05816b;">
+				<div class="container-fluid text-center">
+					<ul class="nav navbar-nav" style="width: 100%;">
+						<li style="width: 20%;"><a href="/home">Home</a></li>
+						<li class=active style="width: 20%;"><a href="/home/messages">Messages</a></li>
+						<li style="width: 20%;"><a href="/home/notifications">Notifications</a></li>
+						<li style="width: 20%;"><a href="/home/systemstats">System Status</a></li>
+						<li style="width: 20%;"><a href="/logout">Logout</a></li>
+					</ul>
+				</div>
+			</nav>
+		</div>		
+	</div>
+	<div style="width:300px;height:500px;border:1px solid #000;float: left;overflow-y: hidden;color: red">
+		{% for machine in machines%}
+			{% if  machine.id  ==  machine_id  %}
+				<li style="color: white"><a href="/home/messages/{{machine.id}}/">{{machine.ip_address}}</a></li>
+			{% else %}
+				<li style="color: red"><a href="/home/messages/{{machine.id}}/">{{machine.ip_address}}</a></li>
+				{% endif %}
+			{% endfor %}
+	</div>
+	<div style="width:700px;height:500px;border:1px solid #000;float: right;color: white ;overflow: hidden;">
+		{% for message in messages %}
+			<li>{{message.username}} @ {{message.time}}</li>
+			<p>{{message.content}}</p>
+			{% endfor %}
+	</div>
+</div>
+</body>
+</html>
