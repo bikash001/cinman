@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from .models import Administrator
 validation=False
 def direct(request):
-	return redirect('/login')	
+	return redirect('/login')
 def login(request):
      return render(request, 'home/login_page.html', {'failed_login': False})
 
@@ -39,4 +39,4 @@ def validateUser(request):
 def logout(request):
 	global validation
 	validation=False
-	redirect('/login')
+	return redirect('/login')

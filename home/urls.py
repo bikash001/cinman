@@ -10,5 +10,6 @@ urlpatterns = [
     url(r'^forgot_pwd$', views.forgot, name='forgot'),
     url(r'^validateUser/', views.validateUser),
     url(r'^home$', views.home, name='home'),
+    url(r'^logout$', views.logout),
     # url(r'^$', views.login, name='login'),
 ]
