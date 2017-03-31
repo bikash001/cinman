@@ -6,6 +6,58 @@
 	<title>messages</title>
 	<link rel="stylesheet" type="text/css" href="{% static 'bootstrap.min.css' %}"/>
 	<link rel="stylesheet" type="text/css" href="{% static 'base.css' %}"/>
+	<style>
+	.vertical-menu {
+    width: 200px;
+    height: 400px;
+    float: left;
+    overflow-y: auto;
+    margin-left: 20px;
+    margin-top: 30px;
+}
+
+.vertical-menu a {
+    background-color: #B2BEB5;
+    color: black;
+    display: block;
+    padding: 12px;
+    text-decoration: none;
+}
+
+.vertical-menu a:hover {
+    background-color: #ccc;
+}
+
+.vertical-menu a.active {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.vertical-menu2 {
+    width: 600px;
+    height: 400px;
+    overflow-y: auto;
+    margin-left: 400px;
+    margin-top: 30px;
+}
+
+.vertical-menu2 a {
+    background-color: #B2BEB5;
+    color: black;
+    display: block;
+    padding: 12px;
+    text-decoration: none;
+}
+
+.vertical-menu2 a:hover {
+    background-color: #ccc;
+}
+
+.vertical-menu2 a.active {
+    background-color: #4CAF50;
+    color: white;
+}
+</style>
 </head>
 <body>
 <div class="container">
@@ -24,19 +76,18 @@
 			</nav>
 		</div>		
 	</div>
-	<div style="width:300px;height:500px;border:1px solid #000;float: left;overflow-y: hidden;color: red">
+	<div class="vertical-menu">
 		{% for machine in machines%}
 			{% if  machine.id  ==  machine_id  %}
-				<li style="color: white"><a href="/home/messages/{{machine.id}}/">{{machine.ip_address}}</a></li>
+				<a href="/home/messages/{{machine.id}}/" class="active">{{machine.ip_address}}</a>
 			{% else %}
-				<li style="color: red"><a href="/home/messages/{{machine.id}}/">{{machine.ip_address}}</a></li>
+				<a href="/home/messages/{{machine.id}}/" >{{machine.ip_address}}</a>
 				{% endif %}
 			{% endfor %}
 	</div>
-	<div style="width:700px;height:500px;border:1px solid #000;float: right;color: white ;overflow: hidden;">
+	<div class="vertical-menu2">
 		{% for message in messages %}
-			<li>{{message.username}} @ {{message.time}}</li>
-			<p>{{message.content}}</p>
+			<a href="#">{{message.username}} @ {{message.time}}<br>{{message.content}}</a>
 			{% endfor %}
 	</div>
 </div>

@@ -74,7 +74,7 @@ def specificsystemdetails(request,machine_id,info_requested):
 
 		if(info_requested=="users"):
 			return render(request, 'home/systemusers.html',context)
-			
+
 	else:
 		return redirect('/login')
 
@@ -91,6 +91,7 @@ def validateUser(request):
 	pwd = request.POST['pwd']
 	usr = None
 	global validation
+	global x
 	try:
 		usr = Administrator.objects.get(username=name)
 	except Administrator.DoesNotExist:
