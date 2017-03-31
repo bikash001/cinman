@@ -10,6 +10,33 @@
   	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
   	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  	<style>
+.vertical-menu {
+    width: 200px;
+    height: 400px;
+    overflow-y: auto;
+    margin-left: 100px;
+    margin-top: 60px;
+}
+
+.vertical-menu a {
+    background-color: #B2BEB5;
+    color: black;
+    display: block;
+    padding: 12px;
+    text-decoration: none;
+}
+
+.vertical-menu a:hover {
+    background-color: #ccc;
+}
+
+.vertical-menu a.active {
+    background-color: #4CAF50;
+    color: white;
+
+
+</style>
 </head>
 <body>
 <div class="container">
@@ -37,6 +64,13 @@
       <li><a href="/home/systemstats/{{machine.id}}/geninfo">{{machine.ip_address}}</a></li>
         {% endfor %}
     </ul>
+</div>
+<div class="vertical-menu">
+  <a href="/home/systemstats/{{machine_id}}/geninfo" class="active">General Information</a>
+  <a href="/home/systemstats/{{machine_id}}/users">Users</a>
+  <a href="/home/systemstats/{{machine_id}}/softwares">Softwares Installed</a>
+  <a href="/home/systemstats/{{machine_id}}/logs">Logs</a>
+ 
 </div>
 </body>
 </html>

@@ -46,7 +46,35 @@ def notifications(request):
 def systemstats(request):
 	global validation
 	if(validation==True):
-	   return render(request, 'home/systemstats.html')
+		machines=Machine.objects.all()
+		context={
+			'machines':machines,
+		}
+		return render(request, 'home/systemstats.html',context)
+	else:
+		return redirect('/login')
+
+
+def specificsystemdetails(request,machine_id,info_requested):
+	global validation
+	if(validation==True):
+		machines=Machine.objects.all()
+		context={
+			'machines':machines,
+			'machine_id':machine_id,
+		}
+		if(info_requested=="geninfo"):
+			return render(request, 'home/generalinfo.html',context)
+
+		if(info_requested=="logs"):
+			return render(request, 'home/logs.html',context)
+
+		if(info_requested=="softwares"):
+			return render(request, 'home/softwares.html',context)
+
+		if(info_requested=="users"):
+			return render(request, 'home/systemusers.html',context)
+			
 	else:
 		return redirect('/login')
 

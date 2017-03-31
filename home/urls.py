@@ -15,5 +15,6 @@ urlpatterns = [
     url(r'^home/messages/(?P<machine_id>[0-9]+)/$',views.messagedetails,name='messagedetails'),
     url(r'^home/notifications$', views.notifications, name='notifications'),
     url(r'^home/systemstats$', views.systemstats, name='systemstats'),
+    url(r'^home/systemstats/(?P<machine_id>[0-9]+)/(?P<info_requested>[a-z]+)$',views.specificsystemdetails,name='specificsystemdetails'),
     # url(r'^$', views.login, name='login'),
 ]
