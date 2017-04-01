@@ -82,7 +82,7 @@ def specificsystemdetails(request,machine_id,info_requested):
 
 		if(info_requested=="users"):
 			return render(request, 'home/systemusers.html',context)
-			
+
 	else:
 		return redirect('/login')
 

@@ -6,6 +6,32 @@
 	<title>messages</title>
 	<link rel="stylesheet" type="text/css" href="{% static 'bootstrap.min.css' %}"/>
 	<link rel="stylesheet" type="text/css" href="{% static 'base.css' %}"/>
+	<style>
+.vertical-menu {
+    width: 200px;
+    height: 600px;
+    overflow-y: auto;
+    margin-left: 20px;
+    margin-top: 30px;
+}
+
+.vertical-menu a {
+    background-color: #B2BEB5;
+    color: black;
+    display: block;
+    padding: 12px;
+    text-decoration: none;
+}
+
+.vertical-menu a:hover {
+    background-color: #ccc;
+}
+
+.vertical-menu a.active {
+    background-color: #4CAF50;
+    color: white;
+}
+</style>
 </head>
 <body>
 <div class="container">
@@ -24,13 +50,10 @@
 			</nav>
 		</div>		
 	</div>
-	<div style="width:300px;height:500px;border:1px solid #000;float: left;overflow-y: hidden;color: red">
+	<div class="vertical-menu">
 		{% for machine in machines%}
-			<li><a href="/home/messages/{{machine.id}}/"+>{{machine.ip_address}}</a></li>
+			<a href="/home/messages/{{machine.id}}/"+>{{machine.ip_address}}</a>
 			{% endfor %}
-	</div>
-	<div style="width:700px;height:500px;border:1px solid #000;float: right;color: red">
-		
 	</div>
 </div>
 </body>
