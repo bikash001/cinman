@@ -1,6 +1,7 @@
 from __future__ import unicode_literals
 
 from django.db import models
+from django.contrib.auth.models import AbstractUser
 
 class Machine(models.Model):
     ip_address=models.CharField(max_length=20)
@@ -81,11 +82,13 @@ class Messages(models.Model):
     def __str__(self):
         return str(self.username) + " "+str(self.time) +"\n"+str(self.content) 
 
-class Administrator(models.Model):
-    username=models.CharField(max_length=30)
-    email=models.CharField(max_length=60)
-    password=models.CharField(max_length=15)
-    phone_number=models.CharField(max_length=14)
+class Administrator(AbstractUser):
 
-    def __str__(self):
-        return self.username
+	phone_number=models.CharField(max_length=14)
+
+    # username=models.CharField(max_length=30)
+    # email=models.CharField(max_length=60)
+    # password=models.CharField(max_length=15)
+
+	def __str__(self):
+		return self.username

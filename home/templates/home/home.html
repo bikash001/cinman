@@ -15,10 +15,10 @@
 				<div class="container-fluid text-center">
 					<ul class="nav navbar-nav" style="width: 100%;">
 						<li class="active" style="width: 20%;"><a href="#">Home</a></li>
-						<li style="width: 20%;"><a href="/home/messages">Messages</a></li>
-						<li style="width: 20%;"><a href="/home/notifications">Notifications</a></li>
-						<li style="width: 20%;"><a href="/home/systemstats">System Status</a></li>
-						<li style="width: 20%;"><a href="logout">Logout</a></li>
+						<li style="width: 20%;"><a href="{% url 'home:messages' %}">Messages</a></li>
+						<li style="width: 20%;"><a href="{% url 'home:notifications' %}">Notifications</a></li>
+						<li style="width: 20%;"><a href="{% url 'home:systemstats' %}">System Status</a></li>
+						<li style="width: 20%;"><a href="{% url 'home:logout' %}">Logout</a></li>
 					</ul>
 				</div>
 			</nav>

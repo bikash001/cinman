@@ -1,19 +1,30 @@
 from django.shortcuts import render, redirect
 from .models import Administrator,Messages,Machine
-validation=False
+from django.contrib import auth
+
 def direct(request):
 	return redirect('/login')
-def login(request):
-     return render(request, 'home/login_page.html', {'failed_login': False})
+
+def login(request, failed=0):
+	if request.user.is_authenticated():
+		return redirect('/home')
+	else:
+		return render(request, 'home/login_page.html', {'failed_login': failed})
 
 def register(request):
-	return render(request, 'home/register.html')
+	if request.user.is_authenticated():
+		return redirect('/home')
+	else:
+		return render(request, 'home/register.html')
 
 def forgot(request):
-	return render(request, 'home/forgot_pwd.html')
+	if request.user.is_authenticated():
+		return redirect('/home')
+	else:
+		return render(request, 'home/forgot_pwd.html')
 
 def messages(request):
-	if(validation==True):
+	if request.user.is_authenticated():
 		machines=Machine.objects.all()
 		context={
 			'machines':machines, 
@@ -23,7 +34,7 @@ def messages(request):
 		return redirect('/login')
 
 def messagedetails(request,machine_id):
-	if(validation==True):
+	if request.user.is_authenticated():
 		messages=Messages.objects.filter(machine=machine_id).order_by('-time')
 		machines=Machine.objects.all()
 		machine_id=int(machine_id)
@@ -37,15 +48,13 @@ def messagedetails(request,machine_id):
 		return redirect('/login')
 
 def notifications(request):
-	global validation
-	if(validation==True):
+	if request.user.is_authenticated():
 	   return render(request, 'home/notifications.html')
 	else:
 		return redirect('/login')
 
 def systemstats(request):
-	global validation
-	if(validation==True):
+	if request.user.is_authenticated():
 		machines=Machine.objects.all()
 		context={
 			'machines':machines,
@@ -56,8 +65,7 @@ def systemstats(request):
 
 
 def specificsystemdetails(request,machine_id,info_requested):
-	global validation
-	if(validation==True):
+	if request.user.is_authenticated():
 		machines=Machine.objects.all()
 		context={
 			'machines':machines,
@@ -80,8 +88,9 @@ def specificsystemdetails(request,machine_id,info_requested):
 
 
 def home(request):
-	global validation
-	if(validation==True):
+	# global validation
+	# if(validation==True):
+	if request.user.is_authenticated():
 	   return render(request, 'home/home.html')
 	else:
 		return redirect('/login')
@@ -89,23 +98,25 @@ def home(request):
 def validateUser(request):
 	name = request.POST['uname']
 	pwd = request.POST['pwd']
-	usr = None
-	global validation
-	try:
-		usr = Administrator.objects.get(username=name)
-	except Administrator.DoesNotExist:
-		pass
-
-	if usr is not None and usr.password == pwd:
-		validation=True
+	usr = auth.authenticate(username=name, password=pwd)
+	# global validation
+	# try:
+	# 	usr = Administrator.objects.get(username=name)
+	# except Administrator.DoesNotExist:
+	# 	pass
+	
+	if usr is not None and usr.is_active:
+		# validation=True
+		auth.login(request,usr)
 		return redirect('/home')
 	else:
-		return render(request, 'home/login_page.html', {'failed_login': True})
+		global failed
+		failed = True
+		return redirect('/login/1/')
 
 
 def logout(request):
-	global validation
-	validation=False
+	auth.logout(request)
 	return redirect('/login')
 
 def getmessages(ip_addr):
