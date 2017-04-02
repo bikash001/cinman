@@ -99,11 +99,6 @@ def validateUser(request):
 	name = request.POST['uname']
 	pwd = request.POST['pwd']
 	usr = auth.authenticate(username=name, password=pwd)
-	# global validation
-	# try:
-	# 	usr = Administrator.objects.get(username=name)
-	# except Administrator.DoesNotExist:
-	# 	pass
 	
 	if usr is not None and usr.is_active:
 		# validation=True
