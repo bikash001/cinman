@@ -53,7 +53,7 @@ $(document).ready(function() {
 
 				} else if (rsp.type === 'stats') {
 					$('#content').append('<div class="row no-margin"><datalist id="ip-datas"></datalist><div style="position:relative; float:left; width:200px;"><input placeholder="ip address" list="ip-datas" style="width:200px; padding:5px;"/></div><div style="float:left;"><button id="gobtn" style="padding:5px; margin-left:5px;" class="btn btn-default">GO</button></div></div>');
-					$('#content').append('<div class="row no-margin"><div class="col-xs-3 left-no-pad" style="margin-top:15px;"><div id="headers" class="list-group"></div></div><div id="detail-contents" class="col-xs-9"></div></div>')
+					$('#content').append('<div class="row no-margin"><div class="col-xs-3 left-no-pad" style="margin-top:15px;"><div id="headers" class="list-group"></div></div><div class="col-xs-3"></div><div id="detail-contents" class="col-xs-6 hide" style="margin-top:15px; background:white;"></div></div>');
 					for (var k=0; k<rsp.data.length; k++) {
 						$('#ip-datas').append('<option value="'+rsp.data[k].ip+'">'+rsp.data[k].ip+'</option>');
 					}
@@ -67,16 +67,14 @@ $(document).ready(function() {
 							}
 						}
 					});
-					// for (var i=0; i<rsp.size; i++) {
-					// 	$('.dropdown-menu').append('<li><a class="pointer msg" id="stat-"'+rsp.data[i].id+' >'+rsp.data[i].ip+'</a></li>');
-					// } 
 				}
 			},
 		});
 	};
 
 	var machineDetails = function(arg) {
-		var baseUrl = '/home/systemstats/';
+		var list = ['Cpu','RAM','Hard Disk','Network Interface','Peripherals','OS','Kernel','Softwares','Users','Logs'];
+		var baseUrl = '/home/system_datas/';
 		console.log(arg);
 		if (csrftoken === undefined) {
 			csrftoken = getCookie();
@@ -84,6 +82,7 @@ $(document).ready(function() {
 		$.ajax({
 			method: 'POST',
 			url: baseUrl+arg+"/",
+			datatype: 'json',
 			headers: {
 				'X-CSRFToken': csrftoken
 			},
@@ -92,39 +91,27 @@ $(document).ready(function() {
 				console.log(rsp);
 			},
 			success: function(rsp) {
-				console.log('lol');
+				// console.log(rsp);
+				// console.log('lol');
+				$('#headers').find('a').click(function() {
+					var id = this.id.split('-')[1];
+					if (id == 0) {
+						$('#detail-contents').removeClass('hide').append('<div style="padding:15px;"><b>CPU</b><br><b>Name:</b> '+rsp['cpu'][3]+'<br><b>Model:</b> '+rsp['cpu'][2]+'<br><b>Speed:</b> '+rsp['cpu'][0]+'<br><b>Total processors:</b> '+rsp['cpu'][4]+'<br><b>Cores per cpu:</b> '+rsp['cpu'][1]+'</div>');
+					} else if (id == 1) {
+
+					} else if (id == 2) {
+
+					} else if (id == 3) {
+
+					}
+				});
 			}
 		});
 		console.log('hello');
-		var list = ['Cpu','RAM','Hard Disk','Motherboard','Network Interface','Peripherals','OS','Softwares','Users','Logs'];
 		for (var i=0; i<list.length; i++) {
-			$('#headers').append('<a id="li-'+i+'" href="#" class="list-group-item">'+list[i]+'</a>');
+			$('#headers').append('<a id="li-'+i+'" class="pointer list-group-item">'+list[i]+'</a>');
 		}
 	};
-
-	// var messageRequest = function(arg) {
-	// 	var baseUrl = '/home/messages/';
-	// 	console.log(arg);
-	// 	if (csrftoken === undefined) {
-	// 		csrftoken = getCookie();
-	// 	}
-	// 	var id = arg.currentTarget.id.split('-')[1]
-	// 	console.log(id);
-	// 	$.ajax({
-	// 		method: 'POST',
-	// 		url: baseUrl+id+"/",
-	// 		headers: {
-	// 			'X-CSRFToken': csrftoken
-	// 		},
-	// 		error: function(rsp) {
-	// 			console.log('error');
-	// 			console.log(rsp);
-	// 		},
-	// 		success: function(rsp) {
-	// 			console.log('lol');
-	// 		}
-	// 	});
-	// };
 
 	var getCookie = function() {
 		var cookieValue = null;

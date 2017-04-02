@@ -68,9 +68,14 @@ def notifications(request):
 
 def systemDetails(request, ip):
 	if request.user.is_authenticated():
-		machine = Machine.objects.get(ip_address=ip)
+		machine = Machine.objects.get(id=ip)
 		obj = {}
-		
+		if (machine is not None):
+			obj['cpu'] = [machine.cpu_speed,machine.cores_per_processor,machine.cpu_model_name,machine.processor,machine.no_of_processors]
+			obj['ram'] = [machine.ram_available_memory,machine.ram_total_memory]
+			obj['hdd'] = [machine.disk_avialble,machine.disk_used,machine.disk_used]
+			obj['ni'] = [machine.ip_address,machine.mac_address,machine.node_hostname]
+			obj['os'] = [machine.operating_system,machine.kernal_name,machine.kernal_release]
 		return JsonResponse(obj)
 	else:
 		return HttpResponse('access denied', status=403)
