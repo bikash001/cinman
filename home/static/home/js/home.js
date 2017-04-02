@@ -6,16 +6,28 @@ $(document).ready(function() {
 		var token = getCookie();
 		$.ajax({
 			method: 'POST',
-			dataType: 'json',
 			url: urls[arg],
 			headers: {
 				'X-CSRFToken': token
 			},
 			error: function(rsp) {
+				console.log('error');
 				console.log(rsp);
 			},
 			success: function(rsp) {
-				console.log(rsp);
+				// console.log('success');
+				// console.log(rsp)
+				if (rsp.type === 'message') {
+					console.log($('#content'));
+					$('#content').empty().append('<div class="vertical-menu"></>');
+					console.log(rsp.size);
+					for (var i=0; i<rsp.size; i++) {
+						console.log('insize', $('.vertical-menu'));
+						$('.vertical-menu').append('<a class="pointer msg" id="msg-"'+rsp.data[i].id+' >'+rsp.data[i].ip+'</a>');
+					}
+				} else if (rsp.type === 'stats') {
+
+				}
 			},
 		});
 	};
@@ -42,6 +54,7 @@ $(document).ready(function() {
 		if (obj.get(0).id !== $(context).get(0).id) {
 			obj.removeClass('active');
 			$(context).addClass('active');
+			$('#content').empty();
 			ajaxCall(urlid);
 		}
 	};
