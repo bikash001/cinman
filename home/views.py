@@ -66,10 +66,20 @@ def notifications(request):
 	else:
 		return redirect('/login')
 
+def systemDetails(request, ip):
+	if request.user.is_authenticated():
+		machine = Machine.objects.get(ip_address=ip)
+		obj = {}
+		
+		return JsonResponse(obj)
+	else:
+		return HttpResponse('access denied', status=403)
+
+
 def systemstats(request):
 	if request.user.is_authenticated():
 		machines=Machine.objects.all()
-		obj = {'size':len(machines), 'type': 'stats', 'data': []}
+		obj = {'type': 'stats', 'data': []}
 		arr = []
 		for machine in machines:
 			val = {}

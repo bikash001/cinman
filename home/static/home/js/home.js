@@ -19,7 +19,7 @@ $(document).ready(function() {
 			},
 			success: function(rsp) {
 				// console.log('success');
-				console.log(rsp)
+				// console.log(rsp)
 				if (rsp.type === 'message') {
 					var messages = rsp.data;
 					var ips = {}
@@ -49,36 +49,41 @@ $(document).ready(function() {
 								}
 							}
 						}
-	// 					<div class="vertical-menu2">
-	// 	{% for message in messages %}
-	// 		<a href="#">{{message.username}} @ {{message.time}}<br>{{message.content}}</a>
-	// 		{% endfor %}
-	// </div>
 					});
 
 				} else if (rsp.type === 'stats') {
-					$('#content').append('<div class="dropdown">\
-    					<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Select IP Address \
-    					<span class="caret"></span></button><ul class="dropdown-menu"></ul></div>');
-					for (var i=0; i<rsp.size; i++) {
-						$('.dropdown-menu').append('<li><a class="pointer msg" id="stat-"'+rsp.data[i].id+' >'+rsp.data[i].ip+'</a></li>');
-					} 
+					$('#content').append('<div class="row no-margin"><datalist id="ip-datas"></datalist><div style="position:relative; float:left; width:200px;"><input placeholder="ip address" list="ip-datas" style="width:200px; padding:5px;"/></div><div style="float:left;"><button id="gobtn" style="padding:5px; margin-left:5px;" class="btn btn-default">GO</button></div></div>');
+					$('#content').append('<div class="row no-margin"><div class="col-xs-3 left-no-pad" style="margin-top:15px;"><div id="headers" class="list-group"></div></div><div id="detail-contents" class="col-xs-9"></div></div>')
+					for (var k=0; k<rsp.data.length; k++) {
+						$('#ip-datas').append('<option value="'+rsp.data[k].ip+'">'+rsp.data[k].ip+'</option>');
+					}
+					$('#gobtn').click(function() {
+						var val = $('#content').find('input').val();
+						console.log(val);
+						for (var k=0; k<rsp.data.length; k++) {
+							if (val == rsp.data[0].ip) {
+								machineDetails(rsp.data[k].id);
+								break;
+							}
+						}
+					});
+					// for (var i=0; i<rsp.size; i++) {
+					// 	$('.dropdown-menu').append('<li><a class="pointer msg" id="stat-"'+rsp.data[i].id+' >'+rsp.data[i].ip+'</a></li>');
+					// } 
 				}
 			},
 		});
 	};
 
-	var messageRequest = function(arg) {
-		var baseUrl = '/home/messages/';
+	var machineDetails = function(arg) {
+		var baseUrl = '/home/systemstats/';
 		console.log(arg);
 		if (csrftoken === undefined) {
 			csrftoken = getCookie();
 		}
-		var id = arg.currentTarget.id.split('-')[1]
-		console.log(id);
 		$.ajax({
 			method: 'POST',
-			url: baseUrl+id+"/",
+			url: baseUrl+arg+"/",
 			headers: {
 				'X-CSRFToken': csrftoken
 			},
@@ -90,7 +95,36 @@ $(document).ready(function() {
 				console.log('lol');
 			}
 		});
+		console.log('hello');
+		var list = ['Cpu','RAM','Hard Disk','Motherboard','Network Interface','Peripherals','OS','Softwares','Users','Logs'];
+		for (var i=0; i<list.length; i++) {
+			$('#headers').append('<a id="li-'+i+'" href="#" class="list-group-item">'+list[i]+'</a>');
+		}
 	};
+
+	// var messageRequest = function(arg) {
+	// 	var baseUrl = '/home/messages/';
+	// 	console.log(arg);
+	// 	if (csrftoken === undefined) {
+	// 		csrftoken = getCookie();
+	// 	}
+	// 	var id = arg.currentTarget.id.split('-')[1]
+	// 	console.log(id);
+	// 	$.ajax({
+	// 		method: 'POST',
+	// 		url: baseUrl+id+"/",
+	// 		headers: {
+	// 			'X-CSRFToken': csrftoken
+	// 		},
+	// 		error: function(rsp) {
+	// 			console.log('error');
+	// 			console.log(rsp);
+	// 		},
+	// 		success: function(rsp) {
+	// 			console.log('lol');
+	// 		}
+	// 	});
+	// };
 
 	var getCookie = function() {
 		var cookieValue = null;
