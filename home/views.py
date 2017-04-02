@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect
 from .models import Administrator,Messages,Machine
 from django.contrib import auth
+from django.http import JsonResponse
+import json
 
 def direct(request):
 	return redirect('/login')
@@ -26,10 +28,20 @@ def forgot(request):
 def messages(request):
 	if request.user.is_authenticated():
 		machines=Machine.objects.all()
-		context={
-			'machines':machines, 
-		}
-		return render(request, 'home/messages.html',context)
+		obj = {'size':len(machines), 'type': 'message', 'data': []}
+		arr = []
+		for machine in machines:
+			val = {}
+			val['id'] = machine.id
+			val['ip'] = machine.ip_address
+			arr.append(val)
+
+		obj['data'] = arr
+		return JsonResponse(obj)
+		# context={
+		# 	'machines':machines, 
+		# }
+		# return render(request, 'home/messages.html',context)
 	else:
 		return redirect('/login')
 
