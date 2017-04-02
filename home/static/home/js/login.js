@@ -13,7 +13,9 @@ $(document).ready(function() {
 				'X-CSRFToken': token
 			},
 			error: function(rsp) {
-				console.log('error');
+				if (index == 0) {
+					$('#errmsg').removeClass('hide').html('invalid credentials');
+				}
 				console.log(rsp);
 			},
 			success: function(rsp) {

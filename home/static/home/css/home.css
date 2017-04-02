@@ -60,7 +60,7 @@ input:focus { box-shadow: inset 0 -5px 45px rgba(100,100,100,0.4), 0 1px 1px rgb
     width: 200px;
     height: 600px;
     overflow-y: auto;
-    margin-left: 20px;
+    /*margin-left: 20px;*/
     margin-top: 30px;
 }
 
@@ -79,4 +79,35 @@ input:focus { box-shadow: inset 0 -5px 45px rgba(100,100,100,0.4), 0 1px 1px rgb
 .vertical-menu a.active {
     background-color: #4CAF50;
     color: white;
+}
+
+.vertical-menu2 {
+    overflow-y: auto;
+    /*max-width: 600px;*/
+    max-height: 400px;
+    margin-top: 30px;
+}
+
+.vertical-menu2 a {
+    background-color: #B2BEB5;
+    color: black;
+    display: block;
+    padding: 12px;
+    text-decoration: none;
+}
+
+.vertical-menu2 a:hover {
+    background-color: #ccc;
+}
+
+.vertical-menu2 a.active {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.right-no-pad {
+	padding-right: 0;
+}
+.left-no-pad {
+	padding-left: 0;
 }

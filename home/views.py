@@ -19,6 +19,7 @@ def register(request):
 	if request.user.is_authenticated():
 		return redirect('/home')
 	else:
+		Administrator.objects.create_user(username=request.POST['uname'], password=request.POST['passwd'], phone_number=request.POST['mobile'])
 		return HttpResponse("user will be registered", status=403)
 
 def forgot(request):
@@ -29,13 +30,15 @@ def forgot(request):
 
 def messages(request):
 	if request.user.is_authenticated():
-		machines=Machine.objects.all()
-		obj = {'size':len(machines), 'type': 'message', 'data': []}
+		messages = Messages.objects.all()
+		obj = {'type': 'message', 'data': []}
 		arr = []
-		for machine in machines:
+		for msg in messages:
 			val = {}
-			val['id'] = machine.id
-			val['ip'] = machine.ip_address
+			val['uname'] = str(msg.username)
+			val['ip'] = str(msg.machine)
+			val['time'] = str(msg.time)
+			val['msg'] = str(msg.content)
 			arr.append(val)
 
 		obj['data'] = arr
@@ -104,8 +107,6 @@ def specificsystemdetails(request,machine_id,info_requested):
 
 
 def home(request):
-	# global validation
-	# if(validation==True):
 	if request.user.is_authenticated():
 	   return render(request, 'home/home.html')
 	else:

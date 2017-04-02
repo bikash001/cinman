@@ -1,14 +1,17 @@
 $(document).ready(function() {
 	
 	var urls = ['/home/','/home/messages/','/home/notifications/','/home/systemstats/']
-	
+	var csrftoken = undefined;
+
 	var ajaxCall = function(arg) {
-		var token = getCookie();
+		if (csrftoken === undefined) {
+			csrftoken = getCookie();
+		}
 		$.ajax({
 			method: 'POST',
 			url: urls[arg],
 			headers: {
-				'X-CSRFToken': token
+				'X-CSRFToken': csrftoken
 			},
 			error: function(rsp) {
 				console.log('error');
@@ -16,14 +19,43 @@ $(document).ready(function() {
 			},
 			success: function(rsp) {
 				// console.log('success');
-				// console.log(rsp)
+				console.log(rsp)
 				if (rsp.type === 'message') {
-					console.log($('#content'));
-					$('#content').append('<div class="vertical-menu">');
-					for (var i=0; i<rsp.size; i++) {
-						console.log('insize', $('.vertical-menu'));
-						$('.vertical-menu').append('<a class="pointer msg" id="msg-"'+rsp.data[i].id+' >'+rsp.data[i].ip+'</a>');
+					var messages = rsp.data;
+					var ips = {}
+					for (var i=0; i<messages.length; i++) {
+						if (ips[messages[i].ip] == undefined) {
+							ips[messages[i].ip] = []
+						}
+						ips[messages[i].ip].push([messages[i].uname,messages[i].time,messages[i].msg])
 					}
+
+					$('#content').append('<div class="col-xs-4 left-no-pad"><div class="vertical-menu"></div></div>');
+					for (var i in ips) {
+						if (ips.hasOwnProperty(i)) {
+							$('.vertical-menu').append('<a class="pointer msg" id="'+i+'" >'+i+'</a>');
+						}
+					}
+					$('.msg').click(function() {
+						$(this).addClass('active');
+						$('#content').append('<div class="col-xs-8 right-no-pad"><div class="vertical-menu2"></div></div>');
+						console.log(ips);
+						for (var i in ips) {
+							if (ips.hasOwnProperty(i)) {
+								var arr = ips[i];
+								console.log(arr);
+								for (var k=0; k<arr.length; k++) {
+									$('.vertical-menu2').append('<a>'+arr[k][0]+' @ '+arr[k][1]+'<br><br>'+arr[k][2]+'</a>');
+								}
+							}
+						}
+	// 					<div class="vertical-menu2">
+	// 	{% for message in messages %}
+	// 		<a href="#">{{message.username}} @ {{message.time}}<br>{{message.content}}</a>
+	// 		{% endfor %}
+	// </div>
+					});
+
 				} else if (rsp.type === 'stats') {
 					$('#content').append('<div class="dropdown">\
     					<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Select IP Address \
@@ -33,6 +65,30 @@ $(document).ready(function() {
 					} 
 				}
 			},
+		});
+	};
+
+	var messageRequest = function(arg) {
+		var baseUrl = '/home/messages/';
+		console.log(arg);
+		if (csrftoken === undefined) {
+			csrftoken = getCookie();
+		}
+		var id = arg.currentTarget.id.split('-')[1]
+		console.log(id);
+		$.ajax({
+			method: 'POST',
+			url: baseUrl+id+"/",
+			headers: {
+				'X-CSRFToken': csrftoken
+			},
+			error: function(rsp) {
+				console.log('error');
+				console.log(rsp);
+			},
+			success: function(rsp) {
+				console.log('lol');
+			}
 		});
 	};
 
