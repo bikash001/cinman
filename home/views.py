@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from .models import Administrator,Messages,Machine
 from django.contrib import auth
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 import json
 
 def direct(request):
@@ -9,21 +9,23 @@ def direct(request):
 
 def login(request, failed=0):
 	if request.user.is_authenticated():
+		print 'success'
 		return redirect('/home')
 	else:
-		return render(request, 'home/login_page.html', {'failed_login': failed})
+		print 'failure'
+		return render(request, 'home/login_page.html')
 
 def register(request):
 	if request.user.is_authenticated():
 		return redirect('/home')
 	else:
-		return render(request, 'home/register.html')
+		return HttpResponse("user will be registered", status=403)
 
 def forgot(request):
 	if request.user.is_authenticated():
 		return redirect('/home')
 	else:
-		return render(request, 'home/forgot_pwd.html')
+		return HttpResponse("new password will be set", status=403)
 
 def messages(request):
 	if request.user.is_authenticated():
@@ -38,10 +40,6 @@ def messages(request):
 
 		obj['data'] = arr
 		return JsonResponse(obj)
-		# context={
-		# 	'machines':machines, 
-		# }
-		# return render(request, 'home/messages.html',context)
 	else:
 		return redirect('/login')
 
@@ -68,10 +66,16 @@ def notifications(request):
 def systemstats(request):
 	if request.user.is_authenticated():
 		machines=Machine.objects.all()
-		context={
-			'machines':machines,
-		}
-		return render(request, 'home/systemstats.html',context)
+		obj = {'size':len(machines), 'type': 'stats', 'data': []}
+		arr = []
+		for machine in machines:
+			val = {}
+			val['id'] = machine.id
+			val['ip'] = machine.ip_address
+			arr.append(val)
+
+		obj['data'] = arr
+		return JsonResponse(obj)
 	else:
 		return redirect('/login')
 
@@ -105,6 +109,7 @@ def home(request):
 	if request.user.is_authenticated():
 	   return render(request, 'home/home.html')
 	else:
+		print 'not logged in'
 		return redirect('/login')
 
 def validateUser(request):
@@ -115,11 +120,9 @@ def validateUser(request):
 	if usr is not None and usr.is_active:
 		# validation=True
 		auth.login(request,usr)
-		return redirect('/home')
+		return HttpResponse('success', status=200)
 	else:
-		global failed
-		failed = True
-		return redirect('/login/1/')
+		return HttpResponse("invalid credentials", status=403)
 
 
 def logout(request):

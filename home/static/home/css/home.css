@@ -1,20 +1,17 @@
 .login { 
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	margin: -150px 0 0 -150px;
-	width:300px;
-	height:300px;
+	max-width:300px;
+	max-height:300px;
+	margin: auto;
+	margin-top: 20vh;
 }
 .header { color: #fff; text-shadow: 0 0 10px rgba(0,0,0,0.3); letter-spacing:1px; text-align:center; }
 
-.signup {
+.forgot, .signup {
 	max-width:300px;
 	max-height:300px;
 	margin: auto;
 	margin-top: 10vh;
 }
-
 
 input { 
 	width: 100%; 

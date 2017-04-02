@@ -19,14 +19,18 @@ $(document).ready(function() {
 				// console.log(rsp)
 				if (rsp.type === 'message') {
 					console.log($('#content'));
-					$('#content').empty().append('<div class="vertical-menu"></>');
-					console.log(rsp.size);
+					$('#content').append('<div class="vertical-menu">');
 					for (var i=0; i<rsp.size; i++) {
 						console.log('insize', $('.vertical-menu'));
 						$('.vertical-menu').append('<a class="pointer msg" id="msg-"'+rsp.data[i].id+' >'+rsp.data[i].ip+'</a>');
 					}
 				} else if (rsp.type === 'stats') {
-
+					$('#content').append('<div class="dropdown">\
+    					<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Select IP Address \
+    					<span class="caret"></span></button><ul class="dropdown-menu"></ul></div>');
+					for (var i=0; i<rsp.size; i++) {
+						$('.dropdown-menu').append('<li><a class="pointer msg" id="stat-"'+rsp.data[i].id+' >'+rsp.data[i].ip+'</a></li>');
+					} 
 				}
 			},
 		});
