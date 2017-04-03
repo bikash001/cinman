@@ -75,7 +75,6 @@ def systemstats(request):
 	else:
 		return redirect('/login')
 
-
 def specificsystemdetails(request,machine_id,info_requested):
 	machine_id = int(machine_id)
 	if request.user.is_authenticated():
@@ -97,8 +96,8 @@ def specificsystemdetails(request,machine_id,info_requested):
 		if(info_requested=="softwares"):
 			return render(request, 'home/softwares.html',context)
 
-		if(info_requested=="users"):
-			return render(request, 'home/systemusers.html',context)
+		if(info_requested=="peripherals"):
+			return render(request, 'home/peripherals.html',context)
 
 	else:
 		return redirect('/login')
