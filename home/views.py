@@ -5,9 +5,12 @@ from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt  
 from django.core.exceptions import ObjectDoesNotExist
 import json
+from datetime import datetime
 
 ram_ip = []
 disk_ip = []
+double_login = {}
+
 def direct(request):
 	return redirect('/login')
 
@@ -32,16 +35,6 @@ def forgot(request):
 def messages(request):
 	if request.user.is_authenticated():
 		machines=Machine.objects.all()
-		# obj = {'size':len(machines), 'type': 'message', 'data': []}
-		# arr = []
-		# for machine in machines:
-		# 	val = {}
-		# 	val['id'] = machine.id
-		# 	val['ip'] = machine.ip_address
-		# 	arr.append(val)
-
-		# obj['data'] = arr
-		# return JsonResponse(obj)
 		context={
 			'machines':machines, 
 		}
@@ -116,16 +109,20 @@ def specificsystemdetails(request,machine_id,info_requested):
 
 
 def home(request):
-	# global validation
-	# if(validation==True):
 	if request.user.is_authenticated():
-	   return render(request, 'home/home.html')
+		userCount = MachineUser.objects.count()
+		machineCount = Machine.objects.count()
+		userActive = UsersActiveOn.objects.values('username').distinct().count()
+		machineActive = UsersActiveOn.objects.values('machine').distinct().count()
+		vals = {'actUsers': userActive, 'actMachines': machineActive, 'machines': machineCount, 'users': userCount}
+		return render(request, 'home/home.html', context=vals)
 	else:
 		return redirect('/login')
 
 @csrf_exempt
 def postdata(request):
 	#CSRF_COOKIE_SECURE=False
+	global ram_ip, disk_ip, double_login
 	request.POST=request.POST.copy()
 	x=request.body
 	myDict = json.loads(x)
@@ -134,7 +131,7 @@ def postdata(request):
 	i=Machine(**myDict)
 	available_ram = float(i.ram_available)
 	total_ram = float(i.ram_total_memory)
-	if i in ram_ip:
+	if i.ip_address in ram_ip:
 		if available_ram/total_ram > 0.2:
 			ram_ip.remove(i)
 	else:
@@ -161,6 +158,9 @@ def postdata(request):
 		machine_ac=Machine.objects.get(mac_address=i.mac_address)
 		try:
 			machineuser=MachineUser.objects.get(username=user)
+			flag = UsersActiveOn.objects.filter(username=machineuser)
+			if flag is not None:
+				double_login[machineuser.username]= datetime.now()
 			z=UsersActiveOn(machine=machine_ac,username=machineuser)
 			z.save()
 		except ObjectDoesNotExist :

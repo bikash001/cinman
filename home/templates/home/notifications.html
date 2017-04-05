@@ -56,11 +56,14 @@
 </div>
 <div class="vertical-menu2">
 	{% for n in ram_ip %}
-		<a href="#">{{n}}</a>
+		<a href="#">{{n}} exceeded 80% of the Total RAM.</a>
 	{% endfor %}
 	{% for n in disk_ip %}
-		<a href="#">{{n}}</a>
-	{% endfor %}	
+		<a href="#">{{n}} exceeded 80% of the Total Disk Space.</a>
+	{% endfor %}
+	{% for key, value in double_login %}
+		<a href="#">{{key}} attempted Double Login at {{value}}.</a>
+	{% endfor %}
 </div>
 </body>
 </html>
