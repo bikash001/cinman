@@ -11,14 +11,62 @@
   	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
   	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
   	<style>
+
+.GenInfo {
+  width: 900px;
+  height: 450px; 
+  float: right;
+  margin-right: 100px;
+  display: block;
+  background-color: #4a7a58; 
+  border: 2px solid;
+  border-radius: 0.6em;
+  border-color: black;
+  border-width: 1px; 
+}
+
+.hardware_table tr:nth-child(odd) {
+    background-color: #aac4b2;
+}
+.proc_table tr:nth-child(even) {
+    background-color: #aac4b2;
+}
+.os_table tr:nth-child(odd) {
+    background-color: #aac4b2;
+}
+.os_table {
+    font-family: arial, sans-serif;
+    width: 50%;
+    float: left;
+    display: block;
+    padding-left: 25px;
+}
+.hardware_table {
+    font-family: arial, sans-serif;
+    width: 50%;
+    float: left;
+    display: block;
+    padding-left: 25px;
+}
+.proc_table {
+    font-family: arial, sans-serif;
+    width: 50%;
+    float: right;
+    display: block;
+}
+
+td{
+    padding-right: 10px;
+    padding-left: 30px
+}
 .vertical-menu {
     width: 200px;
     height: 400px;
     overflow-y: auto;
     margin-left: 100px;
     margin-top: 60px;
+    float: left;
 }
-
 .vertical-menu a {
     background-color: #B2BEB5;
     color: black;
@@ -59,7 +107,7 @@
 <div class="dropdown" style="margin-left:  100px;">
     <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Select IP Address 
     <span class="caret"></span></button>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" ID="dropDownOptions">
     	{% for machine in machines %}
       <li><a href="/home/systemstats/{{machine.id}}/geninfo">{{machine.ip_address}}</a></li>
         {% endfor %}
@@ -67,9 +115,102 @@
 </div>
 <div class="vertical-menu">
   <a href="/home/systemstats/{{machine_id}}/geninfo" class="active">General Information</a>
-  <a href="/home/systemstats/{{machine_id}}/users">Users</a>
+  <a href="/home/systemstats/{{machine_id}}/peripherals">Peripherals</a>
   <a href="/home/systemstats/{{machine_id}}/softwares">Softwares Installed</a>
   <a href="/home/systemstats/{{machine_id}}/logs">Logs</a>
+</div>
+<div class="GenInfo">
+    <h4 style="float:left;width:50%;padding-top:10px;padding-left:25px;"><b>OS Information:</b></h4>
+    <h4 style="padding-top:10px"><b>Processor Information:</b></h4>
+
+    <table class="os_table">
+      <tr>
+        <td>IP Address</td>
+        <td>{{specmachine.ip_address}}</td>
+      </tr>
+      <tr>
+        <td>MAC Address</td>
+        <td>{{specmachine.mac_address}}</td>
+      </tr>
+      <tr>
+        <td>Available RAM</td>
+        <td>{{specmachine.ram_available_memory}}</td>
+      </tr> 
+      <tr>
+        <td>Total RAM</td>
+        <td>{{specmachine.ram_total_memory}}</td>
+      </tr>
+      <tr>
+        <td>Available Disk Space</td>
+        <td>{{specmachine.disk_avialble}}</td>
+      </tr>
+      <tr>
+        <td>Used Disk Space</td>
+        <td>{{specmachine.disk_used}}</td>
+      </tr>
+      <tr>
+        <td>Total Disk Space</td>
+        <td>{{specmachine.disk_size}}</td>
+      </tr>
+    </table>
+    <table class="proc_table">
+      <tr>
+        <td>Number of Processors</td>
+        <td>{{specmachine.no_of_processors}}</td>
+      </tr>
+      <tr>
+        <td>Speed of CPU</td>
+        <td>{{specmachine.cpu_speed}}</td>
+      </tr>
+      <tr>
+        <td>Number of Cores per Processor</td>
+        <td>{{specmachine.cores_per_processor}}</td>
+      </tr>
+      <tr>
+        <td>CPU Model</td>
+        <td>{{specmachine.cpu_model_name}}</td>
+      </tr>
+      <tr>
+        <td>Vendor ID</td>
+        <td>{{specmachine.vendor_id}}</td>
+      </tr>
+      <tr>
+        <td>Cache Size</td>
+        <td>{{specmachine.cache_size}}</td>
+      </tr>
+    </table>
+    <h4>   </h4>
+    <h4 style="float:left;width:60%;padding-top:10px;padding-left:25px;"><b>Hardware Information:</b></h4>
+    <table class="hardware_table">
+      <tr>
+        <td>Hardware Platform</td>
+        <td>{{specmachine.hardware_platform}}</td>
+      </tr>
+      <tr>
+        <td>Kernel Release</td>
+        <td>{{specmachine.kernal_release}}</td>
+      </tr>
+      <tr>
+        <td>Operating System</td>
+        <td>{{specmachine.operating_system}}</td>
+      </tr>
+      <tr>
+        <td>Hardware of Machine</td>
+        <td>{{specmachine.machine_hardware}}</td>
+      </tr>
+      <tr>
+        <td>Hostname of Node</td>
+        <td>{{specmachine.node_hostname}}</td>
+      </tr>
+      <tr>
+        <td>Processor</td>
+        <td>{{specmachine.processor}}</td>
+      </tr>
+      <tr>
+        <td>Name of the Kernel</td>
+        <td>{{specmachine.kernal_name}}</td>
+      </tr>
+    </table>
 </div>
 </body>
 </html>

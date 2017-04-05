@@ -11,6 +11,18 @@
   	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
   	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
   	<style>
+.Logs {
+  width: 900px;
+  height: 450px; 
+  float: right;
+  margin-right: 100px;
+  display: block;
+  background-color: #4a7a58; 
+  border: 2px solid;
+  border-radius: 0.6em;
+  border-color: black;
+  border-width: 1px; 
+}
 .vertical-menu {
     width: 200px;
     height: 400px;
@@ -34,7 +46,7 @@
 .vertical-menu a.active {
     background-color: #4CAF50;
     color: white;
-
+}
 
 </style>
 </head>
@@ -65,12 +77,14 @@
         {% endfor %}
     </ul>
 </div>
-<div class="vertical-menu">
+<div class="vertical-menu" style="float:left">
   <a href="/home/systemstats/{{machine_id}}/geninfo" >General Information</a>
-  <a href="/home/systemstats/{{machine_id}}/users">Users</a>
+  <a href="/home/systemstats/{{machine_id}}/peripherals">Peripherals</a>
   <a href="/home/systemstats/{{machine_id}}/softwares">Softwares Installed</a>
   <a href="/home/systemstats/{{machine_id}}/logs" class="active">Logs</a>
- 
+</div>
+<div class="Logs">
+  
 </div>
 </body>
 </html>

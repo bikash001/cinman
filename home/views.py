@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import Administrator,Messages,Machine,MachineUser,UsersActiveOn
+from .models import Administrator,Messages,Machine,Softwaresinstalled,MachineUser,UsersActiveOn
 from django.contrib import auth
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt  
@@ -12,48 +12,47 @@ def direct(request):
 
 def login(request, failed=0):
 	if request.user.is_authenticated():
-		print 'success'
 		return redirect('/home')
 	else:
-		print 'failure'
-		return render(request, 'home/login_page.html')
+		return render(request, 'home/login_page.html', {'failed_login': failed})
 
 def register(request):
 	if request.user.is_authenticated():
 		return redirect('/home')
 	else:
-		Administrator.objects.create_user(username=request.POST['uname'], password=request.POST['passwd'], phone_number=request.POST['mobile'])
-		return HttpResponse("user will be registered", status=403)
+		return render(request, 'home/register.html')
 
 def forgot(request):
 	if request.user.is_authenticated():
 		return redirect('/home')
 	else:
-		return HttpResponse("new password will be set", status=403)
+		return render(request, 'home/forgot_pwd.html')
 
 def messages(request):
 	if request.user.is_authenticated():
-		messages = Messages.objects.all()
-		obj = {'type': 'message', 'data': []}
-		arr = []
-		for msg in messages:
-			val = {}
-			val['uname'] = str(msg.username)
-			val['ip'] = str(msg.machine)
-			val['time'] = str(msg.time)
-			val['msg'] = str(msg.content)
-			arr.append(val)
+		machines=Machine.objects.all()
+		# obj = {'size':len(machines), 'type': 'message', 'data': []}
+		# arr = []
+		# for machine in machines:
+		# 	val = {}
+		# 	val['id'] = machine.id
+		# 	val['ip'] = machine.ip_address
+		# 	arr.append(val)
 
-		obj['data'] = arr
-		return JsonResponse(obj)
+		# obj['data'] = arr
+		# return JsonResponse(obj)
+		context={
+			'machines':machines, 
+		}
+		return render(request, 'home/messages.html',context)
 	else:
 		return redirect('/login')
 
 def messagedetails(request,machine_id):
 	if request.user.is_authenticated():
+		machine_id=int(machine_id)
 		messages=Messages.objects.filter(machine=machine_id).order_by('-time')
 		machines=Machine.objects.all()
-		machine_id=int(machine_id)
 		context={
 			'machines':machines,
 			'messages':messages,
@@ -69,44 +68,27 @@ def notifications(request):
 	else:
 		return redirect('/login')
 
-def systemDetails(request, ip):
-	if request.user.is_authenticated():
-		machine = Machine.objects.get(id=ip)
-		obj = {}
-		if (machine is not None):
-			obj['cpu'] = [machine.cpu_speed,machine.cores_per_processor,machine.cpu_model_name,machine.processor,machine.no_of_processors]
-			obj['ram'] = [machine.ram_available_memory,machine.ram_total_memory]
-			obj['hdd'] = [machine.disk_avialble,machine.disk_used,machine.disk_used]
-			obj['ni'] = [machine.ip_address,machine.mac_address,machine.node_hostname]
-			obj['os'] = [machine.operating_system,machine.kernal_name,machine.kernal_release]
-		return JsonResponse(obj)
-	else:
-		return HttpResponse('access denied', status=403)
-
-
 def systemstats(request):
-	if request.user.is_authenticated():
-		machines=Machine.objects.all()
-		obj = {'type': 'stats', 'data': []}
-		arr = []
-		for machine in machines:
-			val = {}
-			val['id'] = machine.id
-			val['ip'] = machine.ip_address
-			arr.append(val)
-
-		obj['data'] = arr
-		return JsonResponse(obj)
-	else:
-		return redirect('/login')
-
-
-def specificsystemdetails(request,machine_id,info_requested):
 	if request.user.is_authenticated():
 		machines=Machine.objects.all()
 		context={
 			'machines':machines,
+		}
+		return render(request, 'home/systemstats.html',context)
+	else:
+		return redirect('/login')
+
+def specificsystemdetails(request,machine_id,info_requested):
+	machine_id = int(machine_id)
+	if request.user.is_authenticated():
+		machines=Machine.objects.all()
+		specmachine=Machine.objects.get(id=machine_id)
+		softwares = Softwaresinstalled.objects.filter(machine=specmachine)
+		context={
+			'machines':machines,
 			'machine_id':machine_id,
+			'specmachine': specmachine,
+			'softwares':softwares,
 		}
 		if(info_requested=="geninfo"):
 			return render(request, 'home/generalinfo.html',context)
@@ -117,18 +99,19 @@ def specificsystemdetails(request,machine_id,info_requested):
 		if(info_requested=="softwares"):
 			return render(request, 'home/softwares.html',context)
 
-		if(info_requested=="users"):
-			return render(request, 'home/systemusers.html',context)
+		if(info_requested=="peripherals"):
+			return render(request, 'home/peripherals.html',context)
 
 	else:
 		return redirect('/login')
 
 
 def home(request):
+	# global validation
+	# if(validation==True):
 	if request.user.is_authenticated():
 	   return render(request, 'home/home.html')
 	else:
-		print 'not logged in'
 		return redirect('/login')
 
 @csrf_exempt
@@ -196,9 +179,11 @@ def validateUser(request):
 	if usr is not None and usr.is_active:
 		# validation=True
 		auth.login(request,usr)
-		return HttpResponse('success', status=200)
+		return redirect('/home')
 	else:
-		return HttpResponse("invalid credentials", status=403)
+		global failed
+		failed = True
+		return redirect('/login/1/')
 
 
 def logout(request):

@@ -11,14 +11,15 @@
 <body>
 <div class="container">
 	<div class="row">
-		<div class="col-xs-12">
+		<div class="col-md-12">
 			<nav class="navbar navbar-inverse" style="margin-top: 10px; background: #05816b;">
 				<div class="container-fluid text-center">
 					<ul class="nav navbar-nav" style="width: 100%;">
 						<li id="home" class="active" style="width: 20%;"><a href="#home">Home</a></li>
-						<li id='message' style="width: 20%;"><a href="#messages">Messages</a></li>
-						<li id="notification" style="width: 20%;"><a href="#notifications">Notifications</a></li>
-						<li id="status" style="width: 20%;"><a href="#systemstats">System Status</a></li>
+						<li class="hide" id="message"></li>
+						<li  style="width: 20%;"><a href="{% url 'home:messages' %}">Messages</a></li>
+						<li id="notification" style="width: 20%;"><a href="/home/notifications">Notifications</a></li>
+						<li id="status" style="width: 20%;"><a href="/home/systemstats">System Status</a></li>
 						<li style="width: 20%;"><a href="{% url 'home:logout' %}">Logout</a></li>
 					</ul>
 				</div>
@@ -26,7 +27,7 @@
 		</div>		
 	</div>
 	<div class="row">
-		<div id="content" class="col-xs-12">
+		<div id="content" class="col-md-12">
 			
 		</div>
 	</div>

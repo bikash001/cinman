@@ -11,6 +11,42 @@
   	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
   	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
   	<style>
+
+.SoftWare {
+  width: 900px;
+  height: 450px; 
+  float: right;
+  margin-right: 100px;
+  display: block;
+  background-color: #4a7a58; 
+  border: 2px solid;
+  border-radius: 0.6em;
+  border-color: black;
+  border-width: 1px;
+  padding-left: 25px
+}
+tr:nth-child(even) {
+    background-color: #aac4b2;
+}
+table {
+    font-family: arial, sans-serif;
+    width: 70%;
+    padding-top: 20px;
+    padding-left: 25px;
+
+}
+th{
+  text-align: center;
+  width: 35%;
+  padding: 15px;
+
+}
+td{
+  text-align: center;
+  width: 35%;
+  padding: 15px;
+
+}
 .vertical-menu {
     width: 200px;
     height: 600px;
@@ -65,12 +101,31 @@
         {% endfor %}
     </ul>
 </div>
-<div class="vertical-menu">
+<div class="vertical-menu" style="float:left;">
  <a href="/home/systemstats/{{machine_id}}/geninfo" >General Information</a>
-  <a href="/home/systemstats/{{machine_id}}/users">Users</a>
+  <a href="/home/systemstats/{{machine_id}}/peripherals">Peripherals</a>
   <a href="/home/systemstats/{{machine_id}}/softwares" class="active" >Softwares Installed</a>
   <a href="/home/systemstats/{{machine_id}}/logs">Logs</a>
- 
+</div>
+<div class="SoftWare">
+  <table>
+    <tr>
+      <th>Software</th>
+      <th>Update Available</th>
+      <th>Current Version</th>
+    </tr>
+    {% for i in softwares %}
+    <tr>
+      <td>{{i.name}}</td>
+      {% if i.update_available %}
+        <td>Yes</td>
+      {% else %}
+        <td>No</td>
+      {% endif %}
+      <td>{{i.version}}</td>
+    </tr>
+    {% endfor %}
+  </table>
 </div>
 </body>
 </html>
