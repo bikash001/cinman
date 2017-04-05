@@ -155,7 +155,6 @@ def postmessage(request):
 		del myDict['mac']
 	except ObjectDoesNotExist :
 		return HttpResponse("fail", content_type="text/plain")	
-	print myDict
 	i=Messages(**myDict)
 	i.save()
 	return HttpResponse("success", content_type="text/plain")
