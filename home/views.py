@@ -6,7 +6,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.core.exceptions import ObjectDoesNotExist
 import json
 
-
+ram_ip = []
+disk_ip = []
 def direct(request):
 	return redirect('/login')
 
@@ -53,10 +54,12 @@ def messagedetails(request,machine_id):
 		machine_id=int(machine_id)
 		messages=Messages.objects.filter(machine=machine_id).order_by('-time')
 		machines=Machine.objects.all()
+		specmachine = Machine.objects.get(id=machine_id)
 		context={
 			'machines':machines,
 			'messages':messages,
-			'machine_id':machine_id, 
+			'machine_id':machine_id,
+			'specmachine':specmachine,
 		}
 		return render(request, 'home/messagedetails.html',context)
 	else:
@@ -64,7 +67,13 @@ def messagedetails(request,machine_id):
 
 def notifications(request):
 	if request.user.is_authenticated():
-	   return render(request, 'home/notifications.html')
+		# ram_ip.append("aaa")
+		# disk_ip.append("bbb")
+		context={
+		'ram_ip':ram_ip,
+		'disk_ip':disk_ip,
+		}
+		return render(request, 'home/notifications.html',context)
 	else:
 		return redirect('/login')
 
@@ -123,6 +132,24 @@ def postdata(request):
 	users=myDict['user list']
 	del myDict['user list']
 	i=Machine(**myDict)
+	available_ram = float(i.ram_available)
+	total_ram = float(i.ram_total_memory)
+	if i in ram_ip:
+		if available_ram/total_ram > 0.2:
+			ram_ip.remove(i)
+	else:
+		if available_ram/total_ram < 0.2:
+			ram_ip.append(i)
+
+	available_disk = float(i.disk_available)
+	total_disk = float(i.disk_size)
+	if i in disk_ip:
+		if available_disk/total_disk > 0.2:
+			disk_ip.remove(i)
+	else:
+		if available_disk/total_disk < 0.2:
+			disk_ip.append(i)
+
 	try:
 		machine=Machine.objects.get(mac_address=i.mac_address)
 		Machine.objects.filter(mac_address=i.mac_address).update(**myDict)
