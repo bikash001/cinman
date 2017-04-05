@@ -1,8 +1,11 @@
 from django.shortcuts import render, redirect
-from .models import Administrator,Messages,Machine
+from .models import Administrator,Messages,Machine,MachineUser,UsersActiveOn
 from django.contrib import auth
 from django.http import JsonResponse, HttpResponse
+from django.views.decorators.csrf import csrf_exempt  
+from django.core.exceptions import ObjectDoesNotExist
 import json
+
 
 def direct(request):
 	return redirect('/login')
@@ -127,6 +130,63 @@ def home(request):
 	else:
 		print 'not logged in'
 		return redirect('/login')
+
+@csrf_exempt
+def postdata(request):
+	#CSRF_COOKIE_SECURE=False
+	request.POST=request.POST.copy()
+	x=request.body
+	myDict = json.loads(x)
+	users=myDict['user list']
+	del myDict['user list']
+	i=Machine(**myDict)
+	try:
+		machine=Machine.objects.get(mac_address=i.mac_address)
+		Machine.objects.filter(mac_address=i.mac_address).update(**myDict)
+		UsersActiveOn.objects.filter(machine=machine).delete()
+	except ObjectDoesNotExist :
+		i.save()	
+	for user in users:
+		udict={'username':user}
+		machine_ac=Machine.objects.get(mac_address=i.mac_address)
+		try:
+			machineuser=MachineUser.objects.get(username=user)
+			z=UsersActiveOn(machine=machine_ac,username=machineuser)
+			z.save()
+		except ObjectDoesNotExist :
+			i=MachineUser(**udict)
+			i.save()
+			z=UsersActiveOn(machine=machine_ac,username=machineuser)
+			z.save()
+	
+	return HttpResponse("success", content_type="text/plain")
+
+@csrf_exempt
+def postmessage(request):
+	#CSRF_COOKIE_SECURE=False
+	request.POST=request.POST.copy()
+	x=request.body
+	myDict = json.loads(x)
+	user_id= myDict['user']
+	machine_mac=myDict['mac']
+	try:
+		user=MachineUser.objects.get(username=user_id)
+		myDict['username']=user
+		del myDict['user']
+	except ObjectDoesNotExist :
+		return HttpResponse("fail", content_type="text/plain")
+	
+	try:
+		machine=Machine.objects.get(mac_address=machine_mac)
+		myDict['machine']=machine
+		del myDict['mac']
+	except ObjectDoesNotExist :
+		return HttpResponse("fail", content_type="text/plain")	
+	print myDict
+	i=Messages(**myDict)
+	i.save()
+	return HttpResponse("success", content_type="text/plain")
+
 
 def validateUser(request):
 	name = request.POST['uname']

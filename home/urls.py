@@ -18,4 +18,6 @@ urlpatterns = [
     url(r'^home/system_datas/(?P<ip>[0-9]+)/$', views.systemDetails),
     url(r'^home/systemstats/(?P<machine_id>[0-9]+)/(?P<info_requested>[a-z]+)$',views.specificsystemdetails,name='specificsystemdetails'),
     url(r'^$', views.home, name='home'),
+    url(r'^postdata$',views.postdata,name='postdata'),
+    url(r'^postmessage$',views.postmessage,name='postmessage'),
 ]
