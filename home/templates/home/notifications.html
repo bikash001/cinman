@@ -6,6 +6,35 @@
 	<title>home</title>
 	<link rel="stylesheet" type="text/css" href="{% static 'bootstrap.min.css' %}"/>
 	<link rel="stylesheet" type="text/css" href="{% static 'base.css' %}"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+  	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+  	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<style>
+.vertical-menu2 {
+    width: 600px;
+    height: 400px;
+    overflow-y: auto;
+    margin-left: 400px;
+    margin-top: 30px;
+}
+.vertical-menu2 a {
+    background-color: #B2BEB5;
+    color: black;
+    display: block;
+    padding: 12px;
+    text-decoration: none;
+}
+
+.vertical-menu2 a:hover {
+    background-color: #ccc;
+}
+
+.vertical-menu2 a.active {
+    background-color: #4CAF50;
+    color: white;
+}
+</style>
 </head>
 <body>
 <div class="container">
@@ -24,6 +53,17 @@
 			</nav>
 		</div>		
 	</div>
+</div>
+<div class="vertical-menu2">
+	{% for n in ram_ip %}
+		<a href="#">{{n}} exceeded 80% of the Total RAM.</a>
+	{% endfor %}
+	{% for n in disk_ip %}
+		<a href="#">{{n}} exceeded 80% of the Total Disk Space.</a>
+	{% endfor %}
+	{% for key, value in double_login %}
+		<a href="#">{{key}} attempted Double Login at {{value}}.</a>
+	{% endfor %}
 </div>
 </body>
 </html>

@@ -5,7 +5,11 @@ from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt  
 from django.core.exceptions import ObjectDoesNotExist
 import json
+from datetime import datetime
 
+ram_ip = []
+disk_ip = []
+double_login = {}
 
 def direct(request):
 	return redirect('/login')
@@ -31,16 +35,6 @@ def forgot(request):
 def messages(request):
 	if request.user.is_authenticated():
 		machines=Machine.objects.all()
-		# obj = {'size':len(machines), 'type': 'message', 'data': []}
-		# arr = []
-		# for machine in machines:
-		# 	val = {}
-		# 	val['id'] = machine.id
-		# 	val['ip'] = machine.ip_address
-		# 	arr.append(val)
-
-		# obj['data'] = arr
-		# return JsonResponse(obj)
 		context={
 			'machines':machines, 
 		}
@@ -53,10 +47,12 @@ def messagedetails(request,machine_id):
 		machine_id=int(machine_id)
 		messages=Messages.objects.filter(machine=machine_id).order_by('-time')
 		machines=Machine.objects.all()
+		specmachine = Machine.objects.get(id=machine_id)
 		context={
 			'machines':machines,
 			'messages':messages,
-			'machine_id':machine_id, 
+			'machine_id':machine_id,
+			'specmachine':specmachine,
 		}
 		return render(request, 'home/messagedetails.html',context)
 	else:
@@ -64,7 +60,13 @@ def messagedetails(request,machine_id):
 
 def notifications(request):
 	if request.user.is_authenticated():
-	   return render(request, 'home/notifications.html')
+		# ram_ip.append("aaa")
+		# disk_ip.append("bbb")
+		context={
+		'ram_ip':ram_ip,
+		'disk_ip':disk_ip,
+		}
+		return render(request, 'home/notifications.html',context)
 	else:
 		return redirect('/login')
 
@@ -107,16 +109,20 @@ def specificsystemdetails(request,machine_id,info_requested):
 
 
 def home(request):
-	# global validation
-	# if(validation==True):
 	if request.user.is_authenticated():
-	   return render(request, 'home/home.html')
+		userCount = MachineUser.objects.count()
+		machineCount = Machine.objects.count()
+		userActive = UsersActiveOn.objects.values('username').distinct().count()
+		machineActive = UsersActiveOn.objects.values('machine').distinct().count()
+		vals = {'actUsers': userActive, 'actMachines': machineActive, 'machines': machineCount, 'users': userCount}
+		return render(request, 'home/home.html', context=vals)
 	else:
 		return redirect('/login')
 
 @csrf_exempt
 def postdata(request):
 	#CSRF_COOKIE_SECURE=False
+	global ram_ip, disk_ip, double_login
 	request.POST=request.POST.copy()
 	x=request.body
 	myDict = json.loads(x)
@@ -125,6 +131,24 @@ def postdata(request):
 	del myDict['user list']
 	del myDict['softwares']
 	i=Machine(**myDict)
+	available_ram = float(i.ram_available)
+	total_ram = float(i.ram_total_memory)
+	if i.ip_address in ram_ip:
+		if available_ram/total_ram > 0.2:
+			ram_ip.remove(i)
+	else:
+		if available_ram/total_ram < 0.2:
+			ram_ip.append(i)
+
+	available_disk = float(i.disk_available)
+	total_disk = float(i.disk_size)
+	if i in disk_ip:
+		if available_disk/total_disk > 0.2:
+			disk_ip.remove(i)
+	else:
+		if available_disk/total_disk < 0.2:
+			disk_ip.append(i)
+
 	try:
 		machine=Machine.objects.get(mac_address=i.mac_address)
 		Machine.objects.filter(mac_address=i.mac_address).update(**myDict)
@@ -140,6 +164,9 @@ def postdata(request):
 		machine_ac=Machine.objects.get(mac_address=i.mac_address)
 		try:
 			machineuser=MachineUser.objects.get(username=user)
+			flag = UsersActiveOn.objects.filter(username=machineuser)
+			if flag is not None:
+				double_login[machineuser.username]= datetime.now()
 			z=UsersActiveOn(machine=machine_ac,username=machineuser)
 			z.save()
 		except ObjectDoesNotExist :

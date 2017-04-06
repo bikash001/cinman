@@ -12,7 +12,7 @@
   	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
   	<style>
 
-.Users {
+.Peripherals {
   width: 66%;
   height: 73%; 
   float: right;
@@ -69,7 +69,7 @@
 	</div>	
 </div>
 <div class="dropdown" style="margin-left:  100px;">
-    <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Select IP Address 
+    <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">{{specmachine.ip_address}}
     <span class="caret"></span></button>
     <ul class="dropdown-menu">
     	{% for machine in machines %}
@@ -84,8 +84,7 @@
   <a href="/home/systemstats/{{machine_id}}/softwares">Softwares Installed</a>
   <a href="/home/systemstats/{{machine_id}}/logs">Logs</a>
 </div>
-<div class="Users">
-  
+<div class="Peripherals">
 </div>
 </body>
 </html>

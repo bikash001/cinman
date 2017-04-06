@@ -69,7 +69,7 @@
 	</div>	
 </div>
 <div class="dropdown" style="margin-left:  100px;">
-    <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Select IP Address 
+    <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">{{specmachine.ip_address}}
     <span class="caret"></span></button>
     <ul class="dropdown-menu">
     	{% for machine in machines %}
@@ -84,7 +84,6 @@
   <a href="/home/systemstats/{{machine_id}}/logs" class="active">Logs</a>
 </div>
 <div class="Logs">
-  
 </div>
 </body>
 </html>
