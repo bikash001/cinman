@@ -20,4 +20,5 @@ urlpatterns = [
     url(r'^$', views.home, name='home'),
     url(r'^postdata$',views.postdata,name='postdata'),
     url(r'^postmessage$',views.postmessage,name='postmessage'),
+    url(r'^postlogs$',views.postlogs,name='postlogs'),
 ]

@@ -32,7 +32,10 @@ class Softwaresinstalled(models.Model):
     machine=models.ForeignKey(Machine, null=False, blank=False, related_name="softwares_installed",on_delete=models.CASCADE)
     name=models.CharField(max_length=25)
     #update_available=models.BooleanField(default=False)
-    version=models.CharField(max_length=20)
+    version=models.CharField(max_length=20,blank=True)
+    
+    def __str__(self):
+        return self.name
 
 class Peripherals(models.Model):
     PERIPHERAL_CHOICES=(

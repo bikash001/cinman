@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import Administrator,Messages,Machine,Softwaresinstalled,MachineUser,UsersActiveOn
+from .models import Administrator,Messages,Machine,Softwaresinstalled,MachineUser,UsersActiveOn,Logs
 from django.contrib import auth
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt  
@@ -121,14 +121,20 @@ def postdata(request):
 	x=request.body
 	myDict = json.loads(x)
 	users=myDict['user list']
+	softwares=myDict['softwares']
 	del myDict['user list']
+	del myDict['softwares']
 	i=Machine(**myDict)
 	try:
 		machine=Machine.objects.get(mac_address=i.mac_address)
 		Machine.objects.filter(mac_address=i.mac_address).update(**myDict)
 		UsersActiveOn.objects.filter(machine=machine).delete()
 	except ObjectDoesNotExist :
-		i.save()	
+		i.save()
+	machine=Machine.objects.get(mac_address=i.mac_address)
+	for software in softwares:
+		p=Softwaresinstalled(machine=machine,name=software)
+		p.save()	
 	for user in users:
 		udict={'username':user}
 		machine_ac=Machine.objects.get(mac_address=i.mac_address)
@@ -169,6 +175,16 @@ def postmessage(request):
 	i.save()
 	return HttpResponse("success", content_type="text/plain")
 
+@csrf_exempt
+def postlogs(request):
+	request.POST=request.POST.copy()
+	x=request.body
+	myDict = json.loads(x)
+	machine_mac=Machine.objects.get(mac_address=myDict['mac'])
+	for log in myDict['log']:
+		i=Logs(machine=machine_mac,content=log)
+		i.save()
+	return HttpResponse("success", content_type="text/plain")
 
 def validateUser(request):
 	name = request.POST['uname']
