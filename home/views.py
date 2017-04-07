@@ -82,6 +82,7 @@ def systemstats(request):
 
 def specificsystemdetails(request,machine_id,info_requested):
 	machine_id = int(machine_id)
+	#machine_req=Machine.object.get(id=machine_id)
 	if request.user.is_authenticated():
 		machines=Machine.objects.all()
 		specmachine=Machine.objects.get(id=machine_id)
@@ -94,7 +95,7 @@ def specificsystemdetails(request,machine_id,info_requested):
 			return render(request, 'home/generalinfo.html',context)
 
 		if(info_requested=="logs"):
-			log_details = Logs.objects.all()
+			log_details = Logs.objects.filter(machine=specmachine).order_by('-id')
 			context={
 				'machines':machines,
 				'machine_id':machine_id,
