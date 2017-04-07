@@ -66,7 +66,7 @@
     <span class="caret"></span></button>
     <ul class="dropdown-menu">
     	{% for machine in machines %}
-      <li><a href="/home/messages/{{machine.id}}/">{{machine.ip_address}}</a></li>
+      <li><a href="/home/messages/{{machine.id}}/">{{machine.mac_address}}</a></li>
         {% endfor %}
     </ul>
 </div>

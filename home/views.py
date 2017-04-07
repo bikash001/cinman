@@ -85,20 +85,34 @@ def specificsystemdetails(request,machine_id,info_requested):
 	if request.user.is_authenticated():
 		machines=Machine.objects.all()
 		specmachine=Machine.objects.get(id=machine_id)
-		softwares = Softwaresinstalled.objects.filter(machine=specmachine)
-		context={
-			'machines':machines,
-			'machine_id':machine_id,
-			'specmachine': specmachine,
-			'softwares':softwares,
-		}
 		if(info_requested=="geninfo"):
+			context={
+				'machines':machines,
+				'machine_id':machine_id,
+				'specmachine': specmachine,
+			}
 			return render(request, 'home/generalinfo.html',context)
 
 		if(info_requested=="logs"):
+			log_details = Logs.objects.all()
+			context={
+				'machines':machines,
+				'machine_id':machine_id,
+				'specmachine': specmachine,
+				'log_details': log_details,
+			}
 			return render(request, 'home/logs.html',context)
 
 		if(info_requested=="softwares"):
+			softwares = Softwaresinstalled.objects.filter(machine=specmachine)
+			half_len = softwares.count() / 2
+			context={
+				'machines':machines,
+				'machine_id':machine_id,
+				'specmachine': specmachine,
+				'softwares':softwares,
+				'half_len': half_len,
+			}
 			return render(request, 'home/softwares.html',context)
 
 		if(info_requested=="peripherals"):
@@ -131,17 +145,17 @@ def postdata(request):
 	del myDict['user list']
 	del myDict['softwares']
 	i=Machine(**myDict)
-	available_ram = float(i.ram_available)
-	total_ram = float(i.ram_total_memory)
+	available_ram = float(i.ram_available_memory[:-2])
+	total_ram = float(i.ram_total_memory[:-2])
 	if i.ip_address in ram_ip:
-		if available_ram/total_ram > 0.2:
+		if available_ram/total_ram < 0.2:
 			ram_ip.remove(i)
 	else:
-		if available_ram/total_ram < 0.2:
+		if available_ram/total_ram > 0.2:
 			ram_ip.append(i)
 
-	available_disk = float(i.disk_available)
-	total_disk = float(i.disk_size)
+	available_disk = float(i.disk_available[:-1])
+	total_disk = float(i.disk_size[:-1])
 	if i in disk_ip:
 		if available_disk/total_disk > 0.2:
 			disk_ip.remove(i)
@@ -172,6 +186,7 @@ def postdata(request):
 		except ObjectDoesNotExist :
 			i=MachineUser(**udict)
 			i.save()
+			machineuser=MachineUser.objects.get(username=user)
 			z=UsersActiveOn(machine=machine_ac,username=machineuser)
 			z.save()
 	

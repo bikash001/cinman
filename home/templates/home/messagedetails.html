@@ -82,11 +82,11 @@
 	</div>
 </div>
 <div class="dropdown" style="margin-left:  100px;">
-    <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown"><span id="selectedOption">{{specmachine.ip_address}}</span> 
+    <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown"><span id="selectedOption">{{specmachine.mac_address}}</span> 
     <span class="caret"></span></button>
     <ul class="dropdown-menu">
     	{% for machine in machines %}
-      <li><a href="/home/messages/{{machine.id}}/">{{machine.ip_address}}</a></li>
+      <li><a href="/home/messages/{{machine.id}}/">{{machine.mac_address}}</a></li>
         {% endfor %}
     </ul>
 </div>

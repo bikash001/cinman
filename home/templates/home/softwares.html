@@ -23,17 +23,27 @@
   border-radius: 0.6em;
   border-color: black;
   border-width: 1px;
-  padding-left: 25px
+  padding-left: 25px;
+  overflow-y: scroll;
 }
-tr:nth-child(even) {
+tr:nth-child(odd) {
     background-color: #aac4b2;
 }
-table {
+
+.first{
     font-family: arial, sans-serif;
-    width: 70%;
+    width: 45%;
     padding-top: 20px;
     padding-left: 25px;
-
+    float: left;
+}
+.second{
+    font-family: arial, sans-serif;
+    width: 45%;
+    padding-top: 20px;
+    padding-right: 70px;
+    margin-right: 25px;
+    float: right;
 }
 th{
   text-align: center;
@@ -45,7 +55,6 @@ td{
   text-align: center;
   width: 35%;
   padding: 15px;
-
 }
 .vertical-menu {
     width: 200px;
@@ -93,37 +102,37 @@ td{
 	</div>	
 </div>
 <div class="dropdown" style="margin-left:  100px;">
-    <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">{{specmachine.ip_address}} 
+    <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">{{specmachine.mac_address}} 
     <span class="caret"></span></button>
     <ul class="dropdown-menu">
     	{% for machine in machines %}
-      <li><a href="/home/systemstats/{{machine.id}}/geninfo">{{machine.ip_address}}</a></li>
+      <li><a href="/home/systemstats/{{machine.id}}/geninfo">{{machine.mac_address}}</a></li>
         {% endfor %}
     </ul>
 </div>
 <div class="vertical-menu" style="float:left;">
  <a href="/home/systemstats/{{machine_id}}/geninfo" >General Information</a>
-  <a href="/home/systemstats/{{machine_id}}/peripherals">Peripherals</a>
   <a href="/home/systemstats/{{machine_id}}/softwares" class="active" >Softwares Installed</a>
   <a href="/home/systemstats/{{machine_id}}/logs">Logs</a>
 </div>
 <div class="SoftWare">
-  <table>
-    <tr>
-      <th>Software</th>
-      <th>Update Available</th>
-      <th>Current Version</th>
-    </tr>
+  <h4 style="text-align: center">Software List</h4>
+  <table class="first">
     {% for i in softwares %}
-    <tr>
+    {% if forloop.counter < half_len %}
+    <tr class="fir_tr">
       <td>{{i.name}}</td>
-      {% if i.update_available %}
-        <td>Yes</td>
-      {% else %}
-        <td>No</td>
-      {% endif %}
-      <td>{{i.version}}</td>
     </tr>
+    {% endif %}
+    {% if forloop.counter == half_len%}
+      </table>
+      <table class="second">
+      {% endif %}
+    {% if forloop.counter >= half_len %}
+    <tr class="sec_tr">
+      <td>{{i.name}}</td>
+    </tr>
+    {% endif %}
     {% endfor %}
   </table>
 </div>

@@ -22,7 +22,17 @@
   border-radius: 0.6em;
   border-color: black;
   border-width: 1px; 
+  overflow-y: scroll;
 }
+td{
+    font-family: arial, sans-serif;
+    width: 50%;
+    padding: 20px;
+}
+tr:nth-child(odd) {
+    background-color: #aac4b2;
+}
+
 .vertical-menu {
     width: 200px;
     height: 400px;
@@ -69,21 +79,27 @@
 	</div>	
 </div>
 <div class="dropdown" style="margin-left:  100px;">
-    <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">{{specmachine.ip_address}}
+    <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">{{specmachine.mac_address}}
     <span class="caret"></span></button>
     <ul class="dropdown-menu">
     	{% for machine in machines %}
-      <li><a href="/home/systemstats/{{machine.id}}/geninfo">{{machine.ip_address}}</a></li>
+      <li><a href="/home/systemstats/{{machine.id}}/geninfo">{{machine.mac_address}}</a></li>
         {% endfor %}
     </ul>
 </div>
 <div class="vertical-menu" style="float:left">
   <a href="/home/systemstats/{{machine_id}}/geninfo" >General Information</a>
-  <a href="/home/systemstats/{{machine_id}}/peripherals">Peripherals</a>
   <a href="/home/systemstats/{{machine_id}}/softwares">Softwares Installed</a>
   <a href="/home/systemstats/{{machine_id}}/logs" class="active">Logs</a>
 </div>
 <div class="Logs">
+  <table>
+    {% for log in log_details %}
+      <tr>
+        <td>{{log}}</td>
+      </tr>
+    {% endfor %}
+  </table>
 </div>
 </body>
 </html>

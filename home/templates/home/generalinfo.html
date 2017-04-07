@@ -25,13 +25,7 @@
   border-width: 1px; 
 }
 
-.hardware_table tr:nth-child(odd) {
-    background-color: #aac4b2;
-}
-.proc_table tr:nth-child(even) {
-    background-color: #aac4b2;
-}
-.os_table tr:nth-child(odd) {
+tr:nth-child(odd) {
     background-color: #aac4b2;
 }
 .os_table {
@@ -105,17 +99,16 @@ td{
 	</div>	
 </div>
 <div class="dropdown" style="margin-left:  100px;">
-    <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">{{specmachine.ip_address}}
+    <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">{{specmachine.mac_address}}
     <span class="caret"></span></button>
     <ul class="dropdown-menu" ID="dropDownOptions">
     	{% for machine in machines %}
-      <li><a href="/home/systemstats/{{machine.id}}/geninfo">{{machine.ip_address}}</a></li>
+      <li><a href="/home/systemstats/{{machine.id}}/geninfo">{{machine.mac_address}}</a></li>
         {% endfor %}
     </ul>
 </div>
 <div class="vertical-menu">
   <a href="/home/systemstats/{{machine_id}}/geninfo" class="active">General Information</a>
-  <a href="/home/systemstats/{{machine_id}}/peripherals">Peripherals</a>
   <a href="/home/systemstats/{{machine_id}}/softwares">Softwares Installed</a>
   <a href="/home/systemstats/{{machine_id}}/logs">Logs</a>
 </div>
