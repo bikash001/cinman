@@ -27,16 +27,20 @@
 				</div>
 			</nav>
 		</div>		
+	</div>
+	<div class="row">
+		<div class="col-md-12">
+			<div class="dropdown">
+			    <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown"><span id="selectedOption">Select IP Address</span> 
+			    <span class="caret"></span></button>
+			    <ul class="dropdown-menu">
+			    	{% for machine in machines %}
+			      <li><a href="/home/systemstats/{{machine.id}}/geninfo">{{machine.mac_address}}</a></li>
+			        {% endfor %}
+			    </ul>
+			</div>
+		</div>
 	</div>	
-</div>
-<div class="dropdown" style="margin-left:  100px;">
-    <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown"><span id="selectedOption">Select IP Address</span> 
-    <span class="caret"></span></button>
-    <ul class="dropdown-menu">
-    	{% for machine in machines %}
-      <li><a href="/home/systemstats/{{machine.id}}/geninfo">{{machine.mac_address}}</a></li>
-        {% endfor %}
-    </ul>
 </div>
 </body>
 </html>

@@ -12,7 +12,7 @@
   	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
 	<style>
-	.vertical-menu {
+.vertical-menu {
     width: 200px;
     height: 400px;
     float: left;
@@ -39,10 +39,8 @@
 }
 
 .vertical-menu2 {
-    width: 600px;
     height: 400px;
     overflow-y: auto;
-    margin-left: 400px;
     margin-top: 30px;
 }
 .vertical-menu2 a {
@@ -80,20 +78,26 @@
 			</nav>
 		</div>		
 	</div>
-</div>
-<div class="dropdown" style="margin-left:  100px;">
-    <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown"><span id="selectedOption">{{specmachine.mac_address}}</span> 
-    <span class="caret"></span></button>
-    <ul class="dropdown-menu">
-    	{% for machine in machines %}
-      <li><a href="/home/messages/{{machine.id}}/">{{machine.mac_address}}</a></li>
-        {% endfor %}
-    </ul>
-</div>
-<div class="vertical-menu2">
-	{% for message in messages %}
-		<a id="ab" href="#">{{message.username}} @ {{message.time}}<br>{{message.content}}</a>
-	{% endfor %}
+    <div class="row">
+        <div class="col-md-3">
+            <div class="dropdown">
+                <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown"><span id="selectedOption">{{specmachine.mac_address}}</span> 
+                <span class="caret"></span></button>
+                <ul class="dropdown-menu">
+                    {% for machine in machines %}
+                  <li><a href="/home/messages/{{machine.id}}/">{{machine.mac_address}}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-9">
+            <div class="vertical-menu2">
+                {% for message in messages %}
+                    <a id="ab" href="#">{{message.username}} @ {{message.time}}<br>{{message.content}}</a>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
 </div>
 </body>
 </html>
