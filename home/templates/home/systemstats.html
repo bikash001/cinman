@@ -11,7 +11,7 @@
   	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
   	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
-<body>
+<body style="width: 100%; height: 100%; position: relative; overflow-y: auto;">
 <div class="container">
 	<div class="row">
 		<div class="col-md-12">
@@ -27,16 +27,20 @@
 				</div>
 			</nav>
 		</div>		
+	</div>
+	<div class="row" style="margin-top: 30px;">
+		<div class="col-md-12">
+			<div class="dropdown">
+			    <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown"><span id="selectedOption">Select IP Address</span> 
+			    <span class="caret"></span></button>
+			    <ul class="dropdown-menu">
+			    	{% for machine in machines %}
+			      <li><a href="/home/systemstats/{{machine.id}}/geninfo">{{machine.mac_address}}</a></li>
+			        {% endfor %}
+			    </ul>
+			</div>
+		</div>
 	</div>	
-</div>
-<div class="dropdown" style="margin-left:  100px;">
-    <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown"><span id="selectedOption">Select IP Address</span> 
-    <span class="caret"></span></button>
-    <ul class="dropdown-menu">
-    	{% for machine in machines %}
-      <li><a href="/home/systemstats/{{machine.id}}/geninfo">{{machine.ip_address}}</a></li>
-        {% endfor %}
-    </ul>
 </div>
 </body>
 </html>
