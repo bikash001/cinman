@@ -76,6 +76,9 @@ class Logs(models.Model):
     machine=models.ForeignKey(Machine,related_name="machinelogs",on_delete=models.CASCADE,null=False,blank=False)
     content=models.CharField(max_length=500)
     #type=models.IntegerField(choices=TYPE_CHOICES)
+    def __str__(self):
+        return self.content
+
 
 class Messages(models.Model):
     #session=models.ForeignKey(Session,related_name="message_session")#fill
