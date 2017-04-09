@@ -4,6 +4,7 @@ from django.contrib import auth
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt  
 from django.core.exceptions import ObjectDoesNotExist
+from django.db.models import Count
 import json
 from datetime import datetime
 
@@ -62,9 +63,14 @@ def notifications(request):
 	if request.user.is_authenticated():
 		# ram_ip.append("aaa")
 		# disk_ip.append("bbb")
+		userActive = UsersActiveOn.objects.all().annotate(count=Count('username'))
+		obj = {}
+		for i in range(len(userActive)):
+			print userActive[i].count
 		context={
-		'ram_ip':ram_ip,
-		'disk_ip':disk_ip,
+			'ram_ip':ram_ip,
+			'disk_ip':disk_ip,
+			'double_login': obj
 		}
 		return render(request, 'home/notifications.html',context)
 	else:
