@@ -87,10 +87,12 @@ def specificsystemdetails(request,machine_id,info_requested):
 		machines=Machine.objects.all()
 		specmachine=Machine.objects.get(id=machine_id)
 		if(info_requested=="geninfo"):
+			users_active=UsersActiveOn.objects.filter(machine=specmachine)
 			context={
 				'machines':machines,
 				'machine_id':machine_id,
 				'specmachine': specmachine,
+				'users': users_active,
 			}
 			return render(request, 'home/generalinfo.html',context)
 
@@ -149,10 +151,10 @@ def postdata(request):
 	available_ram = float(i.ram_available_memory[:-2])
 	total_ram = float(i.ram_total_memory[:-2])
 	if i.ip_address in ram_ip:
-		if available_ram/total_ram < 0.2:
+		if available_ram/total_ram > 0.2:
 			ram_ip.remove(i)
 	else:
-		if available_ram/total_ram > 0.2:
+		if available_ram/total_ram < 0.2:
 			ram_ip.append(i)
 
 	available_disk = float(i.disk_available[:-1])
