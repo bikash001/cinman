@@ -96,8 +96,9 @@ def notifications(request):
 		# disk_ip.append("bbb")
 		userActive = UsersActiveOn.objects.all().annotate(count=Count('username'))
 		obj = {}
-		for i in range(len(userActive)):
-			print userActive[i].count
+		# for i in range(len(userActive)):
+		# 	print userActive[i].count
+		# ram_ip = ['127.0.0.1']
 		context={
 			'ram_ip':ram_ip,
 			'disk_ip':disk_ip,
