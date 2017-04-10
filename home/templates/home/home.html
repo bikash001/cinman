@@ -7,6 +7,34 @@
 	<link rel="stylesheet" type="text/css" href="{% static 'bootstrap.min.css' %}"/>
 	<link rel="stylesheet" type="text/css" href="{% static 'base.css' %}"/>
 	<link rel="stylesheet" type="text/css" href="{% static 'home/css/home.css' %}"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+  	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+  	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+	<style>
+.menu {
+	margin-top: 100px;
+}
+.menu div:nth-of-type(odd) {
+    width: 200px;
+    margin-left: 200px;
+    background-color: #B2BEB5;
+    color: black;
+    text-decoration: none;
+        display: block;
+    padding: 12px;
+}
+.menu div:nth-of-type(even) {
+    width: 200px;
+    margin-left: 200px;
+    background-color: #4CAF50;
+    color: white;
+    text-decoration: none;
+    display: block;
+    padding: 12px;
+}
+	</style>
 </head>
 <body>
 <div class="container">
@@ -26,15 +54,15 @@
 		</div>		
 	</div>
 	<div class="row" style="margin: 30px 0;">
-		<div id="content" class="col-xs-6">
-			<img style="max-width: 50vw; max-height: 70vh;" src="{% static '/home/img/CINMan.png' %}">
+		<div id="content" class="col-xs-5">
+		<img src="{% static "CINManupd.png" %}" style="height:525px;width:400px;margin-left:125px;">		
 		</div>
-		<div class="col-xs-6" style="background-color: white; padding: 15px;">
-			<div>Total Machines: {{machines}}</div>
-			<div>Machines active: {{actMachines}}</div>
-			<div>Total Users: {{users}}</div>
-			<div>Users active: {{actUsers}}</div>
-		</div>
+	      <div class="col-xs-7 menu">
+			<div>Total Machines: <b>{{machines}}</b></div>
+			<div>Machines active: <b>{{actMachines}}</b></div>
+			<div>Total Users: <b>{{users}}</b></div>
+			<div>Users active: <b>{{actUsers}}</b></div>
+      </div>
 	</div>
 </div>
 </body>
