@@ -12,8 +12,8 @@ ram_ip = []
 disk_ip = []
 double_login = {}
 
-def direct(request):
-	return redirect('/login')
+# def direct(request):
+# 	return redirect('/login')
 
 def login(request, failed=0):
 	if request.user.is_authenticated():
@@ -25,7 +25,7 @@ def register(request):
 	if request.user.is_authenticated():
 		return redirect('/home')
 	else:
-		return render(request, 'home/register.html')
+		return HttpResponse("user will be registered", status=403)
 
 def registration_hangler(request):
 	user = TempUser.objects.create(username=request.POST['uname'],phone_number=request.POST['mobile'],
@@ -48,7 +48,7 @@ def forgot(request):
 	if request.user.is_authenticated():
 		return redirect('/home')
 	else:
-		return render(request, 'home/forgot_pwd.html')
+		return HttpResponse("new password will be set", status=403)
 
 def messages(request):
 	if request.user.is_authenticated():
@@ -262,11 +262,9 @@ def validateUser(request):
 	if usr is not None and usr.is_active:
 		# validation=True
 		auth.login(request,usr)
-		return redirect('/home')
+		return HttpResponse('success', status=200)
 	else:
-		global failed
-		failed = True
-		return redirect('/login/1/')
+		return HttpResponse("invalid credentials", status=403)
 
 
 def logout(request):
