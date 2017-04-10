@@ -28,10 +28,18 @@ def login(request):
 # 		return HttpResponse("user will be registered", status=403)
 
 def registration_handler(request):
-	user = TempUser.objects.create(username=request.POST['uname'],phone_number=request.POST['mobile'],
-		email=request.POST['email'], first_name=request.POST['fname'], last_name=request.POST['lname'],
-		password=request.POST['passwd'])
-	return HttpResponse('stored data', status=200)
+	temp = None
+	try:
+		temp = Administrator.objects.get(username=request.POST['uname'])
+	except Exception as e:
+		pass
+	if temp:
+		return HttpResponse('username already exist', status=403)
+	else:
+		user = TempUser.objects.create(username=request.POST['uname'],phone_number=request.POST['mobile'],
+			email=request.POST['email'], first_name=request.POST['fname'], last_name=request.POST['lname'],
+			password=request.POST['passwd'])
+		return HttpResponse('stored data', status=200)
 
 def approve_user_registration(request):
 	if request.user.is_authenticated():
@@ -51,7 +59,7 @@ def forgot(request):
 	except Exception as e:
 		pass
 
-	if user:
+	if user != None and user['email'] == request.POST['email']:
 		return HttpResponse("new password will be set", status=202)
 	else:
 		return HttpResponse("user does not exist.", status=403)

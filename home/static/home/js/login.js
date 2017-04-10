@@ -16,8 +16,11 @@ $(document).ready(function() {
 				if (index == 0) {
 					$('#errmsg').removeClass('hide').html('Incorrect Password.');
 				} else if (index == 1) {
-					console.log('register error');
+					$('#errmsg_1').removeClass('hide').html('Username already exist. Please try with a different username.');
+					// console.log('register error');
+					$
 				} else {
+					$('#errmsg_2').removeClass('hide').html('Username-email combination does not exist. Please try with a valid details.');
 					console.log('forgot passwd', rsp);
 				}
 			},
@@ -25,9 +28,12 @@ $(document).ready(function() {
 				if (index == 0) {
 					window.location.reload();
 				} else if (index == 1) {
-					console.log('success register');
+					$('#myModal').removeClass('hide');
+					$('#modal-message').html('You will be notified via email once the registration is successful.');
 				} else {
-					console.log('success password',rsp);
+					console.log('failuer');
+					$('#myModal').removeClass('hide');
+					$('#modal-message').html('Please change your password by going to the link sent to your registered email.');
 				}
 			},
 		});
@@ -97,9 +103,10 @@ $(document).ready(function() {
 			}
 		});
 		if (empty) {
+			console.log('empty');
 			$('#errmsg_2').removeClass('hide').html("Fields can't be empty.");
-		} else if (vals['passwd'] !== vals['cpasswd']) {
-			$('#errmsg_2').removeClass('hide').html("Password didn't match.")
+		} else if (!validateEmail(vals['email'])) {
+			$('#errmsg_2').removeClass('hide').html("Enter valid email address.");
 		} else {
 			$('#errmsg_2').addClass('hide');
 			ajaxCall(vals,2);
@@ -123,9 +130,11 @@ $(document).ready(function() {
 		if (empty) {
 			$('#errmsg_1').removeClass('hide').html("Fields can't be empty.");
 		} else if (!(/^\d+$/.test(vals['mobile']))){
-			$('#errmsg_1').removeClass('hide').html("Mobile field has to be number.")
+			$('#errmsg_1').removeClass('hide').html("Mobile field has to be number.");
+		} else if (!validateEmail(vals['email'])) {
+			$('#errmsg_1').removeClass('hide').html("Enter valid email address.");
 		} else if (vals['passwd'] !== vals['cpasswd']) {
-			$('#errmsg_1').removeClass('hide').html("Password didn't match.")
+			$('#errmsg_1').removeClass('hide').html("Password didn't match.");
 		} else {
 			$('#errmsg_1').addClass('hide');
 			ajaxCall(vals,1);
@@ -133,6 +142,12 @@ $(document).ready(function() {
 	});
 
 	$('#modal-btn').click(function() {
-		
+		$('#myModal').addClass('hide');
+		window.location.reload();
 	});
+
+	function validateEmail(email) {
+	  var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+	  return re.test(email);
+	}
 });
