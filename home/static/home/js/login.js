@@ -4,7 +4,7 @@ $(document).ready(function() {
 	
 	var ajaxCall = function(vals,index) {
 		var token = getCookie();
-		console.log(token);
+		// console.log(token);
 		$.ajax({
 			method: 'POST',
 			url: urls[index],
@@ -13,13 +13,22 @@ $(document).ready(function() {
 				'X-CSRFToken': token
 			},
 			error: function(rsp) {
-				console.log('error');
-				console.log(rsp);
+				if (index == 0) {
+					$('#errmsg').removeClass('hide').html('Incorrect Password.');
+				} else if (index == 1) {
+					console.log('register error');
+				} else {
+					console.log('forgot passwd', rsp);
+				}
 			},
 			success: function(rsp) {
-				console.log('success');
-				console.log(rsp)
-				window.location.reload();
+				if (index == 0) {
+					window.location.reload();
+				} else if (index == 1) {
+					console.log('success register');
+				} else {
+					console.log('success password',rsp);
+				}
 			},
 		});
 	};
@@ -47,13 +56,15 @@ $(document).ready(function() {
 		$('.login').find('input').each(function() {
 			if (this.value == '') {
 				empty = true;
+				return false;
 			} else {
 				vals[this.name] = this.value;
 			}
 		});
 		if (empty) {
-			$('#errmsg').removeClass('hide');
+			$('#errmsg').removeClass('hide').html("Fields can't be empty.");
 		} else {
+			$('#errmsg').addClass('hide');
 			ajaxCall(vals,0);
 		}
 	});
@@ -80,6 +91,7 @@ $(document).ready(function() {
 		$('.forgot').find('input').each(function() {
 			if (this.value == '') {
 				empty = true;
+				return false;
 			} else {
 				vals[this.name] = this.value;
 			}
@@ -89,6 +101,7 @@ $(document).ready(function() {
 		} else if (vals['passwd'] !== vals['cpasswd']) {
 			$('#errmsg_2').removeClass('hide').html("Password didn't match.")
 		} else {
+			$('#errmsg_2').addClass('hide');
 			ajaxCall(vals,2);
 		}
 	});
@@ -99,17 +112,27 @@ $(document).ready(function() {
 		var passwd, cpasswd;
 		$('.signup').find('input').each(function() {
 			if (this.value == '') {
+				// console.log('empty');
+				// console.log(this.value, this.name);
 				empty = true;
+				return false;
 			} else {
 				vals[this.name] = this.value;
 			}
 		});
 		if (empty) {
 			$('#errmsg_1').removeClass('hide').html("Fields can't be empty.");
+		} else if (!(/^\d+$/.test(vals['mobile']))){
+			$('#errmsg_1').removeClass('hide').html("Mobile field has to be number.")
 		} else if (vals['passwd'] !== vals['cpasswd']) {
 			$('#errmsg_1').removeClass('hide').html("Password didn't match.")
 		} else {
+			$('#errmsg_1').addClass('hide');
 			ajaxCall(vals,1);
 		}
+	});
+
+	$('#modal-btn').click(function() {
+		
 	});
 });

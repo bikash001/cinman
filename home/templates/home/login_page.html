@@ -18,13 +18,12 @@
 				<h1 class="header">Login</h1>
 			    <form method="post">
 			    	<div>
-			    		<input type="text" name="uname" placeholder="Username" required="required" />
+			    		<input type="text" name="uname" placeholder="Username"/>
 			    	</div>
 			    	<div>
-			        	<input type="password" name="pwd" placeholder="Password" required="required" />
+			        	<input type="password" name="pwd" placeholder="Password"/>
 			        </div>
 			        <div id="errmsg" class="text-center hide" style="color: red; padding-bottom: 5px;">
-			        	Incorrect Password.
 			        </div>
 			        <div>
 			        	<button id="loginbtn" type="button" class="btn btn-primary btn-block btn-large">Let me in.</button>
@@ -42,22 +41,25 @@
 				<h1 class="header">Register</h1>
 			    <form method="post">
 			    	<div>
-			    		<input type="text" name="fname" placeholder="First Name" required="required" />
+			    		<input type="text" name="uname" placeholder="Username"/>
 			    	</div>
 			    	<div>
-			    		<input type="text" name="lname" placeholder="Last Name" required="required" />
+			    		<input type="text" name="fname" placeholder="First Name"/>
 			    	</div>
 			    	<div>
-			    		<input type="email" name="email" placeholder="Email" required="required" />
+			    		<input type="text" name="lname" placeholder="Last Name"/>
 			    	</div>
 			    	<div>
-			    		<input type="number" name="mobile" placeholder="Mobile" required="required" />
+			    		<input type="email" name="email" placeholder="Email"/>
 			    	</div>
 			    	<div>
-			        	<input type="password" name="passwd" placeholder="Password" required="required" />
+			    		<input type="text" name="mobile" placeholder="Mobile"/>
+			    	</div>
+			    	<div>
+			        	<input type="password" name="passwd" placeholder="Password"/>
 			        </div>
 			    	<div>
-			        	<input type="password" name="cpasswd" placeholder="Confirm Password" required="required" />
+			        	<input type="password" name="cpasswd" placeholder="Confirm Password"/>
 			        </div>
 			        <div id="errmsg_1" class="text-center hide" style="color: red; padding-bottom: 5px;"></div>
 			        <div>
@@ -73,13 +75,13 @@
 				<h2 class="header">Forgot Password</h2>
 			    <form method="post">
 			    	<div>
-			    		<input type="text" name="uname" placeholder="Username" required="required" />
+			    		<input type="text" name="uname" placeholder="Username"/>
 			    	</div>
 			    	<div>
-			        	<input type="password" name="passwd" placeholder="New Password" required="required" />
+			        	<input type="password" name="passwd" placeholder="New Password"/>
 			        </div>
 			    	<div>
-			        	<input type="password" name="cpasswd" placeholder="Confirm Password" required="required" />
+			        	<input type="password" name="cpasswd" placeholder="Confirm Password"/>
 			        </div>
 			        <div id="errmsg_2" class="text-center hide" style="color: red; padding-bottom: 5px;"></div>
 			        <div>
@@ -90,6 +92,16 @@
 		</div>
 		<div class="col-md-4"></div>
 	</div>
+</div>
+<div id="myModal" class="modal">
+	<div class="modal-content">
+		<div class="modal-body">
+	        <p id="modal-message"></p>
+	    </div>
+	      <div class="modal-footer text-center"  style="padding-bottom: 10px;">
+	        <button id="modal-btn" type="button" class="btn btn-primary btn-sm center-block">Continue</button>
+	      </div>
+     </div>
 </div>
 <script type="text/javascript" src="{% static 'jquery.min.js' %}"></script>
 <script type="text/javascript" src="{% static 'home/js/login.js' %}"></script>

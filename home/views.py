@@ -15,23 +15,23 @@ double_login = {}
 # def direct(request):
 # 	return redirect('/login')
 
-def login(request, failed=0):
+def login(request):
 	if request.user.is_authenticated():
 		return redirect('/home')
 	else:
-		return render(request, 'home/login_page.html', {'failed_login': failed})
+		return render(request, 'home/login_page.html')
 
-def register(request):
-	if request.user.is_authenticated():
-		return redirect('/home')
-	else:
-		return HttpResponse("user will be registered", status=403)
+# def register(request):
+# 	if request.user.is_authenticated():
+# 		return redirect('/home')
+# 	else:
+# 		return HttpResponse("user will be registered", status=403)
 
-def registration_hangler(request):
+def registration_handler(request):
 	user = TempUser.objects.create(username=request.POST['uname'],phone_number=request.POST['mobile'],
 		email=request.POST['email'], first_name=request.POST['fname'], last_name=request.POST['lname'],
 		password=request.POST['passwd'])
-	return redirect('/home')
+	return HttpResponse('stored data', status=200)
 
 def approve_user_registration(request):
 	if request.user.is_authenticated():
@@ -40,15 +40,21 @@ def approve_user_registration(request):
 			email=udetails.email, first_name=udetails.first_name, last_name=udetails.last_name,
 			password=udetails.pwd)
 		udetails.delete()
-		return HttpResponse('successfully registered', status=200)
+		return HttpResponse('successfully registered', status=202)
 	else:
-		return HttpResponse('you are not logged in', status=304)
+		return HttpResponse('you are not logged in', status=403)
 
 def forgot(request):
-	if request.user.is_authenticated():
-		return redirect('/home')
+	user = None
+	try:
+		user = Administrator.objects.get(username=request.POST['uname'])
+	except Exception as e:
+		pass
+
+	if user:
+		return HttpResponse("new password will be set", status=202)
 	else:
-		return HttpResponse("new password will be set", status=403)
+		return HttpResponse("user does not exist.", status=403)
 
 def messages(request):
 	if request.user.is_authenticated():
