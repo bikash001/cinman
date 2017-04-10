@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import Administrator,Messages,Machine,Softwaresinstalled,MachineUser,UsersActiveOn,Logs
+from .models import Administrator,Messages,Machine,Softwaresinstalled,MachineUser,UsersActiveOn,Logs,TempUser
 from django.contrib import auth
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt  
@@ -26,6 +26,23 @@ def register(request):
 		return redirect('/home')
 	else:
 		return render(request, 'home/register.html')
+
+def registration_hangler(request):
+	user = TempUser.objects.create(username=request.POST['uname'],phone_number=request.POST['mobile'],
+		email=request.POST['email'], first_name=request.POST['fname'], last_name=request.POST['lname'],
+		password=request.POST['passwd'])
+	return redirect('/home')
+
+def approve_user_registration(request):
+	if request.user.is_authenticated():
+		udetails = TempUser.objects.get(id=request.POST['id'])
+		user = Administrator.objects.create(username=udetails.username,phone_number=udetails.phone_number,
+			email=udetails.email, first_name=udetails.first_name, last_name=udetails.last_name,
+			password=udetails.pwd)
+		udetails.delete()
+		return HttpResponse('successfully registered', status=200)
+	else:
+		return HttpResponse('you are not logged in', status=304)
 
 def forgot(request):
 	if request.user.is_authenticated():
