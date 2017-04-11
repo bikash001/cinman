@@ -151,19 +151,19 @@ def postdata(request):
 	available_ram = float(i.ram_available_memory[:-2])
 	total_ram = float(i.ram_total_memory[:-2])
 	if i.ip_address in ram_ip:
-		if available_ram/total_ram > 0.2:
+		if available_ram/total_ram > 0.8:
 			ram_ip.remove(i)
 	else:
-		if available_ram/total_ram < 0.2:
+		if available_ram/total_ram < 0.8:
 			ram_ip.append(i)
 
 	available_disk = float(i.disk_available[:-1])
 	total_disk = float(i.disk_size[:-1])
 	if i in disk_ip:
-		if available_disk/total_disk > 0.2:
+		if available_disk/total_disk > 0.8:
 			disk_ip.remove(i)
 	else:
-		if available_disk/total_disk < 0.2:
+		if available_disk/total_disk < 0.8:
 			disk_ip.append(i)
 
 	try:

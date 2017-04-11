@@ -109,7 +109,7 @@ td{
       <div class="col-md-6">
         <table class="first">
           {% for i in softwares %}
-          {% if forloop.counter < half_len %}
+          {% if forloop.counter <= half_len %}
           <tr class="fir_tr">
             <td>{{i.name}}</td>
           </tr>
@@ -120,7 +120,7 @@ td{
       <div class="col-md-6">
         <table class="second">
         {% endif %}
-          {% if forloop.counter >= half_len %}
+          {% if forloop.counter > half_len %}
           <tr class="sec_tr">
             <td>{{i.name}}</td>
           </tr>
