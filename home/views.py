@@ -7,6 +7,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Count
 import json
 from datetime import datetime
+import subprocess as sb
 
 ram_ip = []
 disk_ip = []
@@ -56,6 +57,21 @@ def decline_user_registration(request):
 	if request.user.is_authenticated()  and request.user.is_superuser:
 		TempUser.objects.filter(id=request.POST['id']).delete()
 		return HttpResponse('deleted', status=200)
+	else:
+		return HttpResponse('you are not logged in', status=403)
+
+def current_status(request):
+	if request.user.is_authenticated():
+		ipList = Machine.objects.values_list('ip_address', flat=True)
+		print ipList
+		obj = {}
+		for ip in ipList:
+			try:
+				ret = sb.check_output(['ping','-c 5','-f','-i 0.2', ip])
+				obj[ip] = 1
+			except Exception as e:
+				obj[ip] = 0
+		return JsonResponse(obj)
 	else:
 		return HttpResponse('you are not logged in', status=403)
 
@@ -200,7 +216,21 @@ def home(request):
 		machineCount = Machine.objects.count()
 		userActive = UsersActiveOn.objects.values('username').distinct().count()
 		machineActive = UsersActiveOn.objects.values('machine').distinct().count()
-		vals = {'actUsers': userActive, 'actMachines': machineActive, 'machines': machineCount, 'users': userCount}
+		
+		superuser = {}
+		users = []
+		admins = Administrator.objects.all()
+		for x in admins:
+			if x.is_superuser:
+				superuser['name'] = x.first_name+" "+x.last_name
+				superuser['email'] = x.email
+				superuser['mobile'] = x.phone_number
+			else:
+				users.append({'name': x.first_name+" "+x.last_name, 'email': x.email,
+					'mobile': x.phone_number})
+
+		vals = {'actUsers': userActive, 'actMachines': machineActive, 'machines': machineCount,
+		'usercount': userCount, 'superuser': superuser, 'users': users}
 		return render(request, 'home/home.html', context=vals)
 	else:
 		return redirect('/login')

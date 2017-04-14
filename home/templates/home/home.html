@@ -8,34 +8,11 @@
 	<link rel="stylesheet" type="text/css" href="{% static 'base.css' %}"/>
 	<link rel="stylesheet" type="text/css" href="{% static 'home/css/home.css' %}"/>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-  	<style>
-.menu {
-	margin-top: 100px;
-}
-.menu div:nth-of-type(odd) {
-    width: 200px;
-    margin-left: 200px;
-    background-color: #B2BEB5;
-    color: black;
-    text-decoration: none;
-        display: block;
-    padding: 12px;
-}
-.menu div:nth-of-type(even) {
-    width: 200px;
-    margin-left: 200px;
-    background-color: #4CAF50;
-    color: white;
-    text-decoration: none;
-    display: block;
-    padding: 12px;
-}
-	</style>
 </head>
 <body>
 <div class="container">
 	<div class="row">
-		<div class="col-xs-12">
+		<div class="col-md-12">
 			<nav class="navbar navbar-inverse" style="margin-top: 10px; background: #05816b;">
 				<div class="container-fluid text-center">
 					<ul class="nav navbar-nav" style="width: 100%;">
@@ -49,18 +26,50 @@
 			</nav>
 		</div>		
 	</div>
-	<div class="row" style="margin: 30px 0;">
-		<div id="content" class="col-xs-5">
-			<img src="{% static 'home/img/CINManupd.png' %}" style="max-height:500px;max-width:400px;margin-left:125px;"/>	
+	<div class="row" style="margin:0">
+	<div class="col-md-12 no-pad" style="display: flex;">
+		<div style="flex: 1; margin: 2px;">
+			<div style="background-color: white; padding: 0 15px; height: 81vh; overflow-y: auto;">
+				<div>
+					<h3 class="text-center">Superuser</h3><hr>
+					<div>
+						Name: {{superuser.name}}<br>
+						Email: {{superuser.email}}<br>
+						Mobile: {{superuser.mobile}}
+					</div>
+				</div>
+				<div>
+					<hr>
+					<h3 class="text-center">Administrators</h3>
+					{% for user in users %}
+					<div style="margin-bottom: 10px;">
+						<hr>
+						Name: {{user.name}}<br>
+						Email: {{user.email}}<br>
+						Mobile: {{user.mobile}}
+					</div>
+					{% endfor %}
+				</div>
+			</div>
 		</div>
-	    <div class="col-xs-7">
-	    	<div class="menu">
-				<div>Total Machines: <b>{{machines}}</b></div>
-				<div>Machines active: <b>{{actMachines}}</b></div>
-				<div>Total Users: <b>{{users}}</b></div>
-				<div>Users active: <b>{{actUsers}}</b></div>
-      		</div>
-      </div>
+		<div style="flex: 1; margin: 2px;">
+			<div style="background-color: white; padding: 15px; margin-bottom: 17px;">
+				Total Machines: <b>{{machines}}</b><br>
+				Machines active: <b>{{actMachines}}</b>
+			</div>
+			<div>
+				<img src="{% static 'home/img/CINManupd.png' %}" style="max-width: 100%; max-height: 100%;">
+			</div>
+			<div style="background-color: white; padding: 15px; margin-top: 17px;">
+				Total Users: <b>{{usercount}}</b><br>
+				Users active: <b>{{actUsers}}</b>
+			</div>
+		</div>
+	    <div style="flex: 2; margin: 2px;">
+		    <div  style="background-color: white; padding: 15px; overflow-y: auto; height: 100%;">
+		    	
+		    </div>
+	    </div>
 	</div>
 </div>
 </body>
