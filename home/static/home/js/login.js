@@ -78,16 +78,19 @@ $(document).ready(function() {
 	$('#login-registerbtn').click(function(){
 		$('.login').addClass('hide');
 		$('.signup').removeClass('hide');
+		$('#register-form').get(0).reset();
 	});
 
 	$('#login-forgotbtn').click(function(){
 		$('.login').addClass('hide');
 		$('.forgot').removeClass('hide');
+		$('#forgot-form').get(0).reset();
 	});
 
 	$('#signinbtn').click(function(){
 		$('.signup').addClass('hide');
 		$('.login').removeClass('hide');
+		$('#login-form').get(0).reset();
 	});
 
 	$('#forgot-submitbtn').click(function(){
@@ -150,4 +153,5 @@ $(document).ready(function() {
 	  var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 	  return re.test(email);
 	}
+	$('#login-form').get(0).reset();
 });

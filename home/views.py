@@ -38,17 +38,24 @@ def registration_handler(request):
 	else:
 		user = TempUser.objects.create(username=request.POST['uname'],phone_number=request.POST['mobile'],
 			email=request.POST['email'], first_name=request.POST['fname'], last_name=request.POST['lname'],
-			password=request.POST['passwd'])
+			password=auth.hashers.make_password(request.POST['passwd']))
 		return HttpResponse('stored data', status=200)
 
 def approve_user_registration(request):
-	if request.user.is_authenticated():
+	if request.user.is_authenticated() and request.user.is_superuser:
 		udetails = TempUser.objects.get(id=request.POST['id'])
 		user = Administrator.objects.create(username=udetails.username,phone_number=udetails.phone_number,
 			email=udetails.email, first_name=udetails.first_name, last_name=udetails.last_name,
-			password=udetails.pwd)
+			password=udetails.password)
 		udetails.delete()
 		return HttpResponse('successfully registered', status=202)
+	else:
+		return HttpResponse('you are not logged in', status=403)
+
+def decline_user_registration(request):
+	if request.user.is_authenticated()  and request.user.is_superuser:
+		TempUser.objects.filter(id=request.POST['id']).delete()
+		return HttpResponse('deleted', status=200)
 	else:
 		return HttpResponse('you are not logged in', status=403)
 
@@ -94,15 +101,39 @@ def notifications(request):
 	if request.user.is_authenticated():
 		# ram_ip.append("aaa")
 		# disk_ip.append("bbb")
-		userActive = UsersActiveOn.objects.all().annotate(count=Count('username'))
 		obj = {}
-		# for i in range(len(userActive)):
-		# 	print userActive[i].count
-		# ram_ip = ['127.0.0.1']
+		prev = ""
+		temp = []
+		# print 'hello', userActive[0].username == userActive[1].username
+		# print userActive[0].username, userActive[1].username
+		userActive = UsersActiveOn.objects.order_by('username')
+		for i in range(len(userActive)):
+			if (prev == userActive[i].username):
+				temp.append(str(userActive[i].machine))
+			else:
+				prev = userActive[i].username
+				if len(temp) > 1:
+					obj[str(userActive[i-1].username)] = temp
+					# print 'temp',temp
+					temp = []
+				else:
+					# print 'na', userActive[i].username
+					temp = [str(userActive[i].machine)]
+		if len(temp) > 1:
+			obj[str(userActive[-1])] = temp
+			# print temp
+		
+		users = {}
+		if request.user.is_superuser:
+			tempuser = TempUser.objects.all()
+			for x in tempuser:
+				users[str(x.id)] = [str(x.first_name), str(x.last_name), str(x.email), str(x.phone_number)]
+
 		context={
 			'ram_ip':ram_ip,
 			'disk_ip':disk_ip,
-			'double_login': obj
+			'double_login': obj,
+			'users': users
 		}
 		return render(request, 'home/notifications.html',context)
 	else:

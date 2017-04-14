@@ -16,7 +16,7 @@
 			{% csrf_token %}
 			<div class="login">
 				<h1 class="header">Login</h1>
-			    <form method="post">
+			    <form id="login-form" method="post">
 			    	<div>
 			    		<input type="text" name="uname" placeholder="Username"/>
 			    	</div>
@@ -39,7 +39,7 @@
 		    </div>
 		    <div class="signup hide">
 				<h1 class="header">Register</h1>
-			    <form method="post">
+			    <form id="register-form" method="post">
 			    	<div>
 			    		<input type="text" name="uname" placeholder="Username"/>
 			    	</div>
@@ -73,7 +73,7 @@
 			</div>
 			<div class="forgot hide">
 				<h2 class="header">Forgot Password</h2>
-			    <form method="post">
+			    <form id="forgot-form" method="post">
 			    	<div>
 			    		<input type="text" name="uname" placeholder="Username"/>
 			    	</div>

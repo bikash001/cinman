@@ -8,32 +8,29 @@
 	<link rel="stylesheet" type="text/css" href="{% static 'base.css' %}"/>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
   	<script src="{% static 'jquery.min.js' %}"></script>
-  <script src="{% static 'bootstrap.min.js' %}"></script>
-  
+  	<script src="{% static 'bootstrap.min.js' %}"></script>
+  	<script type="text/javascript" src="{% static 'home/js/notification.js' %}"></script>
 <style>
 .vertical-menu2 {
-    width: 600px;
+    /*width: 600px;
     height: 400px;
-    overflow-y: auto;
-    margin-left: 150px;
+    */overflow-y: auto;
+    /*margin-left: 150px;*/
     margin-top: 30px;
 }
-.vertical-menu2 a {
-    background-color: #B2BEB5;
+
+.pad{
+	padding: 12px;
+}
+
+.card{
+	background-color: #B2BEB5;
     color: black;
     display: block;
-    padding: 12px;
+    margin-bottom: 10px;
     text-decoration: none;
 }
 
-.vertical-menu2 a:hover {
-    background-color: #ccc;
-}
-
-.vertical-menu2 a.active {
-    background-color: #4CAF50;
-    color: white;
-}
 </style>
 </head>
 <body>
@@ -55,15 +52,40 @@
 	</div>
 	<div class="row">
 		<div class="col-md-12">
-			<div class="vertical-menu2">
+			<div class="vertical-menu2" style="width: 70%; margin:auto;">
 				{% for n in ram_ip %}
 					<a href="#">{{n}} exceeded 10% of the Total RAM.</a>
 				{% endfor %}
 				{% for n in disk_ip %}
 					<a href="#">{{n}} exceeded 10% of the Total Disk Space.</a>
 				{% endfor %}
-				{% for key, value in double_login %}
-					<a href="#">{{key}} attempted Double Login at {{value}}.</a>
+				{% for key,value in double_login.items %}
+					<div class="card pad">User <b>{{key}}</b> is active at following systems.<br>
+						<ul>
+						{% for i in value %} 
+							<li>{{i}}</li>
+						{% endfor %}
+						</ul>
+						<!-- <button class="btn btn-danger" style="margin-top: 5px; width: 50%;">Delete</button> -->
+					</div>
+				{% endfor %}
+				{% for key,value in users.items %}
+					<div class="card" id="reg-{{key}}">
+						<div style="padding: 5px 10px 10px;">
+							<h4>User Registration.</h4>
+							<b>Name:</b> {{value.0}} {{value.1}}<br>
+							<b>Email:</b> {{value.2}}<br>
+							<b>Mobile:</b> {{value.3}}
+						</div>
+						<div class="row" style="margin: 0;">
+							<div class="col-md-6" style="padding: 0;">
+							<button id="apv-{{key}}" class="btn btn-success" style="margin-top: 5px; width: 100%; ">Accept</button>
+							</div>
+							<div class="col-md-6"  style="padding: 0;">
+							<button id="dec-{{key}}" class="btn btn-danger" style="margin-top: 5px; width: 100%; ">Reject</button>
+							</div>
+						</div>
+					</div>
 				{% endfor %}
 			</div>
 		</div>
