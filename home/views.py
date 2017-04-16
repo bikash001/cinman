@@ -12,9 +12,6 @@ import subprocess as sb
 from django.core.mail import send_mail
 
 
-# def direct(request):
-# 	return redirect('/login')
-
 def sendMail(reques):
 	send_mail('Test', 'hw r u?', 'abc@gmail.com',
 		['xxx@gmail.com'])
@@ -25,12 +22,6 @@ def login(request):
 		return redirect('/home')
 	else:
 		return render(request, 'home/login_page.html')
-
-# def register(request):
-# 	if request.user.is_authenticated():
-# 		return redirect('/home')
-# 	else:
-# 		return HttpResponse("user will be registered", status=403)
 
 def registration_handler(request):
 	temp = None
@@ -223,10 +214,20 @@ def home(request):
 		machineCount = Machine.objects.count()
 		now = timezone.now()
 		earlier = now - timedelta(minutes=5)
-		userActive = UsersActiveOn.objects.values('username').filter(time__range=(earlier,now)).distinct().count()
-		machineActive = UsersActiveOn.objects.values('machine').filter(time__range=(earlier,now)).distinct().count()
+		actusers = UsersActiveOn.objects.values('username').distinct()
+		userActive = len(actusers)
+		macs = UsersActiveOn.objects.values('machine').distinct()
+		machineActive = macs.count()
 		machines = Machine.objects.all()
-		ips = {}
+		ips = []
+		# print macs
+		# for x in macs:
+		# 	print str(x.machine), "hello"
+			# ips.append(machines.get(mac_address=x.))
+		# print users
+		# print macs
+		# for x in macs:
+
 		superuser = {}
 		users = []
 		admins = Administrator.objects.all()
@@ -240,7 +241,7 @@ def home(request):
 					'mobile': x.phone_number})
 
 		vals = {'actUsers': userActive, 'actMachines': machineActive, 'machines': machineCount,
-		'usercount': userCount, 'superuser': superuser, 'users': users}
+		'usercount': userCount, 'superuser': superuser, 'users': users, 'ips': ips}
 		return render(request, 'home/home.html', context=vals)
 	else:
 		return redirect('/login')
