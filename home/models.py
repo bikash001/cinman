@@ -39,15 +39,6 @@ class Softwaresinstalled(models.Model):
     def __str__(self):
         return self.name
 
-class Peripherals(models.Model):
-    PERIPHERAL_CHOICES=(
-        (1,"Keyboard"),
-        (2,"Mouse"),
-        (3,"Speaker")
-    )
-    machine = models.ForeignKey(Machine, null=False, blank=False, related_name="peripherals",on_delete=models.CASCADE)
-    type=models.IntegerField(choices=PERIPHERAL_CHOICES)
-    presence=models.BooleanField(default=True)
 
 class MachineUser(models.Model):
     username=models.CharField(max_length=30)
@@ -55,6 +46,14 @@ class MachineUser(models.Model):
 
     def __str__(self):
         return self.username
+
+class Peripherals(models.Model):
+    machine = models.ForeignKey(Machine, null=False, blank=False, related_name="peripherals",on_delete=models.CASCADE)
+    username=models.ForeignKey(MachineUser, null=False, blank=False, related_name="peripherals_user",on_delete=models.CASCADE)
+    device_type=models.CharField(max_length=20)
+    connected=models.CharField(max_length=50)
+    disconnected=models.CharField(max_length=50,default="Not Yet")
+    device_number=models.CharField(max_length=10)
 
 
 class UsersActiveOn(models.Model):

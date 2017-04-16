@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import Administrator,Messages,Machine,Softwaresinstalled,MachineUser,UsersActiveOn,Logs,TempUser
+from .models import Administrator,Messages,Machine,Softwaresinstalled,MachineUser,UsersActiveOn,Logs,TempUser,Peripherals
 from django.contrib import auth
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt  
@@ -333,6 +333,25 @@ def postlogs(request):
 		i=Logs(machine=machine_mac,content=log)
 		i.save()
 	return HttpResponse("success", content_type="text/plain")
+
+@csrf_exempt
+def postperipherals(request):
+	request.POST=request.POST.copy()
+	x=request.body
+	myDict = json.loads(x)
+	machine_mac=Machine.objects.get(mac_address=myDict['mac_address'])
+	username=MachineUser.objects.get(username=myDict['username'])
+	del myDict['mac_address']
+	del myDict['username']
+	myDict['machine']=machine_mac
+	myDict['username']=username
+	i=Peripherals(**myDict)
+	try:
+		x=Peripherals.objects.get(machine=machine_mac,device_number=myDict['device_number'])
+		Peripherals.objects.filter(machine=machine_mac,device_number=myDict['device_number']).update(disconnected=myDict['disconnected'])
+	except ObjectDoesNotExist:
+		i.save()	
+	return HttpResponse("success", content_type="text/plain")	
 
 def validateUser(request):
 	name = request.POST['uname']

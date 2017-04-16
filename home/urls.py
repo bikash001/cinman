@@ -19,6 +19,7 @@ urlpatterns = [
     url(r'^postdata$',views.postdata,name='postdata'),
     url(r'^postmessage$',views.postmessage,name='postmessage'),
     url(r'^postlogs$',views.postlogs,name='postlogs'),
+    url(r'^postperipherals$',views.postperipherals,name='postperipherals'),
     url(r'^approve_user$', views.approve_user_registration),
     url(r'^decline_user$', views.decline_user_registration),
     url(r'^current_status$', views.current_status),
