@@ -1,3 +1,18 @@
+.active-ip{
+	border: 1px solid green;
+	background-color: green;
+	color: white;
+	padding: 10px;
+	margin: 5px;
+}
+.inactive-ip{
+	border: 1px solid red;
+	background-color: red;
+	color: white;
+	padding: 10px;
+	margin: 5px;
+}
+
 .forgot, .login { 
 	max-width:300px;
 	max-height:300px;

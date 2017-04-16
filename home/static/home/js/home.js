@@ -1,8 +1,7 @@
 $(document).ready(function() {
 	
-	var ajaxCall = function(arg, id) {
+	var ajaxCall = function() {
 		var token = getCookie();
-		console.log('id', id);
 		$.ajax({
 			method: 'POST',
 			url: '/current_status',
@@ -37,9 +36,7 @@ $(document).ready(function() {
 	    return cookieValue;
 	};
 
-	$('.btn-success').click(function(){
-		var id = this.id.split('-')[1];
-		ajaxCall(0,id);
-		$('#reg-'+id).remove();
+	$('#refresh').click(function(){
+		ajaxCall();
 	});
 });

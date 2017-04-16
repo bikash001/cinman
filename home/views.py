@@ -9,10 +9,16 @@ import json
 from datetime import datetime,timedelta
 from django.utils import timezone
 import subprocess as sb
+from django.core.mail import send_mail
 
 
 # def direct(request):
 # 	return redirect('/login')
+
+def sendMail(reques):
+	send_mail('Test', 'hw r u?', 'abc@gmail.com',
+		['xxx@gmail.com'])
+	return HttpResponse('lol', status=200)
 
 def login(request):
 	if request.user.is_authenticated():
@@ -219,6 +225,8 @@ def home(request):
 		earlier = now - timedelta(minutes=5)
 		userActive = UsersActiveOn.objects.values('username').filter(time__range=(earlier,now)).distinct().count()
 		machineActive = UsersActiveOn.objects.values('machine').filter(time__range=(earlier,now)).distinct().count()
+		machines = Machine.objects.all()
+		ips = {}
 		superuser = {}
 		users = []
 		admins = Administrator.objects.all()
