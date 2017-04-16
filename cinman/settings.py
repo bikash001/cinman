@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
 import os
+import psycopg2
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -25,7 +26,7 @@ SECRET_KEY = 'lbd*406(l3v519rx^n#k+7k6vw%--qxw+1ue6=du!fr#4&e09d'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.pythonanywhere.com','10.22.25.202','192.168.0.17']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.pythonanywhere.com','10.22.25.202','192.168.0.17','10.22.24.231']
 
 
 # Application definition
@@ -76,8 +77,12 @@ WSGI_APPLICATION = 'cinman.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'cinman',
+        'USER': 'cinman',
+        'PASSWORD': 'cinman',
+        'HOST': '127.0.0.1',
+        'PORT': '5432',
     }
 }
 

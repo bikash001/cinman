@@ -30,7 +30,7 @@ class Machine(models.Model):
 
 class Softwaresinstalled(models.Model):
     machine=models.ForeignKey(Machine, null=False, blank=False, related_name="softwares_installed",on_delete=models.CASCADE)
-    name=models.CharField(max_length=25)
+    name=models.CharField(max_length=50)
     #update_available=models.BooleanField(default=False)
     version=models.CharField(max_length=20,blank=True)
     
@@ -57,6 +57,7 @@ class MachineUser(models.Model):
 class UsersActiveOn(models.Model):
     username=models.ForeignKey(MachineUser,related_name="active_users")
     machine=models.ForeignKey(Machine,related_name="active_machines")
+    time=models.DateTimeField(auto_now_add=True)
    
     def __str__(self):
         return str(self.username)+" "+str(self.machine)

@@ -5,7 +5,8 @@ from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt  
 from django.core.exceptions import ObjectDoesNotExist
 import json
-from datetime import datetime
+from datetime import datetime,timedelta
+from django.utils import timezone
 
 ram_ip = []
 disk_ip = []
@@ -62,6 +63,7 @@ def notifications(request):
 	if request.user.is_authenticated():
 		# ram_ip.append("aaa")
 		# disk_ip.append("bbb")
+		#print ram_ip
 		context={
 		'ram_ip':ram_ip,
 		'disk_ip':disk_ip,
@@ -127,8 +129,10 @@ def home(request):
 	if request.user.is_authenticated():
 		userCount = MachineUser.objects.count()
 		machineCount = Machine.objects.count()
-		userActive = UsersActiveOn.objects.values('username').distinct().count()
-		machineActive = UsersActiveOn.objects.values('machine').distinct().count()
+		now = timezone.now()
+		earlier = now - timedelta(minutes=5)
+		userActive = UsersActiveOn.objects.values('username').filter(time__range=(earlier,now)).distinct().count()
+		machineActive = UsersActiveOn.objects.values('machine').filter(time__range=(earlier,now)).distinct().count()
 		vals = {'actUsers': userActive, 'actMachines': machineActive, 'machines': machineCount, 'users': userCount}
 		return render(request, 'home/home.html', context=vals)
 	else:
@@ -145,15 +149,17 @@ def postdata(request):
 	softwares=myDict['softwares']
 	del myDict['user list']
 	del myDict['softwares']
+	#print myDict
 	i=Machine(**myDict)
 	available_ram = float(i.ram_available_memory[:-2])
 	total_ram = float(i.ram_total_memory[:-2])
-	if i.ip_address in ram_ip:
-		if available_ram/total_ram < 0.2:
-			ram_ip.remove(i)
-	else:
+	
+	if i.mac_address in ram_ip:
 		if available_ram/total_ram > 0.2:
-			ram_ip.append(i)
+			ram_ip.remove(i.mac_address)
+	else:
+		if available_ram/total_ram < 0.2:
+			ram_ip.append(i.mac_address)
 
 	available_disk = float(i.disk_available[:-1])
 	total_disk = float(i.disk_size[:-1])
