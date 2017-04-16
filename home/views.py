@@ -89,7 +89,7 @@ def forgot(request):
 	else:
 		return HttpResponse("user does not exist.", status=403)
 
-def messages(request):
+def messages(request): #renders message.html
 	if request.user.is_authenticated():
 		machines=Machine.objects.all()
 		context={
@@ -99,7 +99,7 @@ def messages(request):
 	else:
 		return redirect('/login')
 
-def messagedetails(request,machine_id):
+def messagedetails(request,machine_id):#returns messages of individual connected machine
 	if request.user.is_authenticated():
 		machine_id=int(machine_id)
 		messages=Messages.objects.filter(machine=machine_id).order_by('-time')
@@ -116,7 +116,7 @@ def messagedetails(request,machine_id):
 	else:
 		return redirect('/login')
 
-def notifications(request):
+def notifications(request): 
 	if request.user.is_authenticated():
 		# ram_ip.append("aaa")
 		# disk_ip.append("bbb")
@@ -151,7 +151,7 @@ def notifications(request):
 
 		ram_ip=Machine.objects.filter(ramusagehigh=True)
 		disk_ip=Machine.objects.filter(diskusagehigh=True)
-		peripherals=Peripherals.objects.all()	
+		peripherals=Peripherals.objects.all()	#list of peripherals
 		context={
 			'ram_ip':ram_ip,
 			'disk_ip':disk_ip,
@@ -163,7 +163,7 @@ def notifications(request):
 	else:
 		return redirect('/login')
 
-def systemstats(request):
+def systemstats(request):#renders systemstats.html
 	if request.user.is_authenticated():
 		machines=Machine.objects.all()
 		context={
@@ -224,17 +224,17 @@ def home(request):
 		machineCount = Machine.objects.count()
 		now = timezone.now()
 		earlier = now - timedelta(minutes=5)
-		actusers = UsersActiveOn.objects.values_list('username').filter(time__range=(earlier,now)).distinct()
+		actusers = UsersActiveOn.objects.values_list('username').filter(time__range=(earlier,now)).distinct() #usersactive list 
 		userActive = len(actusers)
-		macs = UsersActiveOn.objects.values_list('machine').filter(time__range=(earlier,now)).distinct()
+		macs = UsersActiveOn.objects.values_list('machine').filter(time__range=(earlier,now)).distinct() #machinesactive list
 		machineActive = macs.count()
 		machines = Machine.objects.all()
 		ips = []
 		usernames=[]
-		for actuser in actusers:
+		for actuser in actusers: #getting activeusers list
 			usernames.append(MachineUser.objects.get(id=actuser[0]))
 
-		for mac in macs:
+		for mac in macs:  #getting activemachines list
 			ips.append(Machine.objects.get(id=mac[0]))
 
 		#print ips
@@ -265,7 +265,7 @@ def home(request):
 		return redirect('/login')
 
 @csrf_exempt
-def postdata(request):
+def postdata(request): #general information is posted through this url
 	#CSRF_COOKIE_SECURE=False
 	request.POST=request.POST.copy()
 	x=request.body
@@ -285,29 +285,29 @@ def postdata(request):
 	try:
 		machine=Machine.objects.get(mac_address=i.mac_address)
 		Machine.objects.filter(mac_address=i.mac_address).update(**myDict)
-		UsersActiveOn.objects.filter(machine=machine).delete()
+		UsersActiveOn.objects.filter(machine=machine).delete() # deleting previous users active on this machine
 	except ObjectDoesNotExist :
 		i.save()
 	machine=Machine.objects.get(mac_address=i.mac_address)
 
-	if(available_ram/total_ram<0.7):
+	if(available_ram/total_ram<0.7): #setting ramusage high boolean
 		Machine.objects.filter(mac_address=i.mac_address).update(ramusagehigh=True)
 	else:	
 		Machine.objects.filter(mac_address=i.mac_address).update(ramusagehigh=False)
 
-	if(available_disk/total_disk<0.7):
+	if(available_disk/total_disk<0.7):  #setting diskusagehigh boolean
 		Machine.objects.filter(mac_address=i.mac_address).update(diskusagehigh=True)
 	else:	
 		Machine.objects.filter(mac_address=i.mac_address).update(diskusagehigh=False)
 
-	for software in softwares:
+	for software in softwares: #inserting softwares into database
 		p=Softwaresinstalled(machine=machine,name=software)
 		p.save()
 
-	for delsoftware in delsoftwares:
+	for delsoftware in delsoftwares: #deleting uninstalled softwares from database
 		Softwaresinstalled.objects.filter(machine=machine,name=delsoftware).delete()
 			
-	for user in users:
+	for user in users:  #adding new users active on this machine to database
 		udict={'username':user}
 		machine_ac=Machine.objects.get(mac_address=i.mac_address)
 		try:
@@ -324,43 +324,43 @@ def postdata(request):
 	return HttpResponse("success", content_type="text/plain")
 
 @csrf_exempt
-def postmessage(request):
+def postmessage(request):  # messages from client are processed here
 	#CSRF_COOKIE_SECURE=False
 	request.POST=request.POST.copy()
 	x=request.body
 	myDict = json.loads(x)
 	user_id= myDict['user']
 	machine_mac=myDict['mac']
-	try:
+	try:   # checking whether username exists in db
 		user=MachineUser.objects.get(username=user_id)
 		myDict['username']=user
 		del myDict['user']
 	except ObjectDoesNotExist :
 		return HttpResponse("fail", content_type="text/plain")
 	
-	try:
+	try:  #checking whether machine is in db
 		machine=Machine.objects.get(mac_address=machine_mac)
 		myDict['machine']=machine
 		del myDict['mac']
 	except ObjectDoesNotExist :
 		return HttpResponse("fail", content_type="text/plain")	
-	i=Messages(**myDict)
-	i.save()
+	i=Messages(**myDict)  #inserting into database
+	i.save()  
 	return HttpResponse("success", content_type="text/plain")
 
 @csrf_exempt
-def postlogs(request):
+def postlogs(request):  #logs from client are processed here
 	request.POST=request.POST.copy()
 	x=request.body
 	myDict = json.loads(x)
 	machine_mac=Machine.objects.get(mac_address=myDict['mac'])
-	for log in myDict['log']:
+	for log in myDict['log']: 
 		i=Logs(machine=machine_mac,content=log)
 		i.save()
 	return HttpResponse("success", content_type="text/plain")
 
 @csrf_exempt
-def postperipherals(request):
+def postperipherals(request): #peripherals from client are processed here
 	request.POST=request.POST.copy()
 	x=request.body
 	myDict = json.loads(x)
@@ -371,11 +371,11 @@ def postperipherals(request):
 	myDict['machine']=machine_mac
 	myDict['username']=username
 	i=Peripherals(**myDict)
-	try:
+	try:  #Changing disconnected field from default to original time
 		x=Peripherals.objects.get(machine=machine_mac,device_number=myDict['device_number'])
 		Peripherals.objects.filter(machine=machine_mac,device_number=myDict['device_number']).update(disconnected=myDict['disconnected'])
 	except ObjectDoesNotExist:
-		i.save()	
+		i.save()	#adding new usb device
 	return HttpResponse("success", content_type="text/plain")	
 
 def validateUser(request):
@@ -391,7 +391,7 @@ def validateUser(request):
 		return HttpResponse("invalid credentials", status=403)
 
 
-def logout(request):
+def logout(request):# redirects to login page
 	auth.logout(request)
 	return redirect('/login')
 
