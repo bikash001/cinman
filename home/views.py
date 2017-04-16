@@ -1,37 +1,92 @@
 from django.shortcuts import render, redirect
-from .models import Administrator,Messages,Machine,Softwaresinstalled,MachineUser,UsersActiveOn,Logs
+from .models import Administrator,Messages,Machine,Softwaresinstalled,MachineUser,UsersActiveOn,Logs,TempUser
 from django.contrib import auth
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt  
 from django.core.exceptions import ObjectDoesNotExist
+from django.db.models import Count
 import json
 from datetime import datetime,timedelta
 from django.utils import timezone
+import subprocess as sb
 
 ram_ip = []
 disk_ip = []
 double_login = {}
 
-def direct(request):
-	return redirect('/login')
+# def direct(request):
+# 	return redirect('/login')
 
-def login(request, failed=0):
+def login(request):
 	if request.user.is_authenticated():
 		return redirect('/home')
 	else:
-		return render(request, 'home/login_page.html', {'failed_login': failed})
+		return render(request, 'home/login_page.html')
 
-def register(request):
-	if request.user.is_authenticated():
-		return redirect('/home')
+# def register(request):
+# 	if request.user.is_authenticated():
+# 		return redirect('/home')
+# 	else:
+# 		return HttpResponse("user will be registered", status=403)
+
+def registration_handler(request):
+	temp = None
+	try:
+		temp = Administrator.objects.get(username=request.POST['uname'])
+	except Exception as e:
+		pass
+	if temp:
+		return HttpResponse('username already exist', status=403)
 	else:
-		return render(request, 'home/register.html')
+		user = TempUser.objects.create(username=request.POST['uname'],phone_number=request.POST['mobile'],
+			email=request.POST['email'], first_name=request.POST['fname'], last_name=request.POST['lname'],
+			password=auth.hashers.make_password(request.POST['passwd']))
+		return HttpResponse('stored data', status=200)
+
+def approve_user_registration(request):
+	if request.user.is_authenticated() and request.user.is_superuser:
+		udetails = TempUser.objects.get(id=request.POST['id'])
+		user = Administrator.objects.create(username=udetails.username,phone_number=udetails.phone_number,
+			email=udetails.email, first_name=udetails.first_name, last_name=udetails.last_name,
+			password=udetails.password)
+		udetails.delete()
+		return HttpResponse('successfully registered', status=202)
+	else:
+		return HttpResponse('you are not logged in', status=403)
+
+def decline_user_registration(request):
+	if request.user.is_authenticated()  and request.user.is_superuser:
+		TempUser.objects.filter(id=request.POST['id']).delete()
+		return HttpResponse('deleted', status=200)
+	else:
+		return HttpResponse('you are not logged in', status=403)
+
+def current_status(request):
+	if request.user.is_authenticated():
+		ipList = Machine.objects.values_list('ip_address', flat=True)
+		print ipList
+		obj = {}
+		for ip in ipList:
+			try:
+				ret = sb.check_output(['ping','-c 5','-f','-i 0.2', ip])
+				obj[ip] = 1
+			except Exception as e:
+				obj[ip] = 0
+		return JsonResponse(obj)
+	else:
+		return HttpResponse('you are not logged in', status=403)
 
 def forgot(request):
-	if request.user.is_authenticated():
-		return redirect('/home')
+	user = None
+	try:
+		user = Administrator.objects.get(username=request.POST['uname'])
+	except Exception as e:
+		pass
+
+	if user != None and user['email'] == request.POST['email']:
+		return HttpResponse("new password will be set", status=202)
 	else:
-		return render(request, 'home/forgot_pwd.html')
+		return HttpResponse("user does not exist.", status=403)
 
 def messages(request):
 	if request.user.is_authenticated():
@@ -63,10 +118,39 @@ def notifications(request):
 	if request.user.is_authenticated():
 		# ram_ip.append("aaa")
 		# disk_ip.append("bbb")
-		#print ram_ip
+		obj = {}
+		prev = ""
+		temp = []
+		# print 'hello', userActive[0].username == userActive[1].username
+		# print userActive[0].username, userActive[1].username
+		userActive = UsersActiveOn.objects.order_by('username')
+		for i in range(len(userActive)):
+			if (prev == userActive[i].username):
+				temp.append(str(userActive[i].machine))
+			else:
+				prev = userActive[i].username
+				if len(temp) > 1:
+					obj[str(userActive[i-1].username)] = temp
+					# print 'temp',temp
+					temp = []
+				else:
+					# print 'na', userActive[i].username
+					temp = [str(userActive[i].machine)]
+		if len(temp) > 1:
+			obj[str(userActive[-1])] = temp
+			# print temp
+		
+		users = {}
+		if request.user.is_superuser:
+			tempuser = TempUser.objects.all()
+			for x in tempuser:
+				users[str(x.id)] = [str(x.first_name), str(x.last_name), str(x.email), str(x.phone_number)]
+
 		context={
-		'ram_ip':ram_ip,
-		'disk_ip':disk_ip,
+			'ram_ip':ram_ip,
+			'disk_ip':disk_ip,
+			'double_login': obj,
+			'users': users
 		}
 		return render(request, 'home/notifications.html',context)
 	else:
@@ -89,10 +173,12 @@ def specificsystemdetails(request,machine_id,info_requested):
 		machines=Machine.objects.all()
 		specmachine=Machine.objects.get(id=machine_id)
 		if(info_requested=="geninfo"):
+			users_active=UsersActiveOn.objects.filter(machine=specmachine)
 			context={
 				'machines':machines,
 				'machine_id':machine_id,
 				'specmachine': specmachine,
+				'users': users_active,
 			}
 			return render(request, 'home/generalinfo.html',context)
 
@@ -133,7 +219,20 @@ def home(request):
 		earlier = now - timedelta(minutes=5)
 		userActive = UsersActiveOn.objects.values('username').filter(time__range=(earlier,now)).distinct().count()
 		machineActive = UsersActiveOn.objects.values('machine').filter(time__range=(earlier,now)).distinct().count()
-		vals = {'actUsers': userActive, 'actMachines': machineActive, 'machines': machineCount, 'users': userCount}
+		superuser = {}
+		users = []
+		admins = Administrator.objects.all()
+		for x in admins:
+			if x.is_superuser:
+				superuser['name'] = x.first_name+" "+x.last_name
+				superuser['email'] = x.email
+				superuser['mobile'] = x.phone_number
+			else:
+				users.append({'name': x.first_name+" "+x.last_name, 'email': x.email,
+					'mobile': x.phone_number})
+
+		vals = {'actUsers': userActive, 'actMachines': machineActive, 'machines': machineCount,
+		'usercount': userCount, 'superuser': superuser, 'users': users}
 		return render(request, 'home/home.html', context=vals)
 	else:
 		return redirect('/login')
@@ -153,7 +252,6 @@ def postdata(request):
 	i=Machine(**myDict)
 	available_ram = float(i.ram_available_memory[:-2])
 	total_ram = float(i.ram_total_memory[:-2])
-	
 	if i.mac_address in ram_ip:
 		if available_ram/total_ram > 0.2:
 			ram_ip.remove(i.mac_address)
@@ -243,11 +341,9 @@ def validateUser(request):
 	if usr is not None and usr.is_active:
 		# validation=True
 		auth.login(request,usr)
-		return redirect('/home')
+		return HttpResponse('success', status=200)
 	else:
-		global failed
-		failed = True
-		return redirect('/login/1/')
+		return HttpResponse("invalid credentials", status=403)
 
 
 def logout(request):

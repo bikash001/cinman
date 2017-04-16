@@ -93,6 +93,15 @@ class Messages(models.Model):
     def __str__(self):
         return str(self.username) + " "+str(self.time) +"\n"+str(self.content) 
 
+class TempUser(models.Model):
+    username = models.CharField(max_length=150)
+    email = models.CharField(max_length=100)
+    first_name = models.CharField(max_length=30, blank=True)
+    last_name = models.CharField(max_length=30, blank=True)
+    password = models.CharField(max_length=100)
+    phone_number=models.CharField(max_length=14)
+
+
 class Administrator(AbstractUser):
 
 	phone_number=models.CharField(max_length=14)
