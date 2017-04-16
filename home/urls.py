@@ -23,4 +23,5 @@ urlpatterns = [
     url(r'^decline_user$', views.decline_user_registration),
     url(r'^current_status$', views.current_status),
     url(r'^send_mail$',views.sendMail),
+    url(r'^delete_msg$',views.delete_msg),
 ]

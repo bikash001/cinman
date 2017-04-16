@@ -12,7 +12,14 @@ import subprocess as sb
 from django.core.mail import send_mail
 
 
-def sendMail(reques):
+def delete_msg(request):
+	if request.user.is_authenticated():
+		Messages.objects.filter(id=request.POST['id']).delete()
+		return HttpResponse('deleted', status=200)
+	else:
+		return HttpResponse('unauthorised', status=403)
+	
+def sendMail(request):
 	send_mail('Test', 'hw r u?', 'abc@gmail.com',
 		['xxx@gmail.com'])
 	return HttpResponse('lol', status=200)
@@ -104,6 +111,7 @@ def messagedetails(request,machine_id):
 			'machine_id':machine_id,
 			'specmachine':specmachine,
 		}
+
 		return render(request, 'home/messagedetails.html',context)
 	else:
 		return redirect('/login')

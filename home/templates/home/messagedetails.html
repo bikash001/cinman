@@ -9,6 +9,8 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
   	<script src="{% static 'jquery.min.js' %}"></script>
     <script src="{% static 'bootstrap.min.js' %}"></script>
+    <script src="{% static 'home/js/message.js' %}"></script>
+    
   <style>
 .vertical-menu {
     width: 200px;
@@ -76,7 +78,7 @@
 		</div>		
 	</div>
     <div class="row" style="margin: 30px 0 0;">
-        <div class="col-md-3" style="padding-left: 0;">
+        <div class="col-md-3 no-pad-left">
             <div class="dropdown">
                 <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown"><span id="selectedOption">{{specmachine.mac_address}}</span> 
                 <span class="caret"></span></button>
@@ -87,11 +89,27 @@
                 </ul>
             </div>
         </div>
-        <div class="col-md-9">
+        <div class="col-md-9 no-pad-right">
             <div class="vertical-menu2">
+                {% if messages %}
                 {% for message in messages %}
-                    <a id="ab" href="#">{{message.username}} @ {{message.time}}<br>{{message.content}}</a>
+                <div id="msgbox-{{message.id}}" style="background-color: white; border-radius: 5px; padding: 10px;">
+                    <div>
+                        <h4 style="display: inline; vertical-align: middle; padding: 10px;">{{message.username}} @ {{message.time}}</h4>
+                        <button id="msg-{{message.id}}" class="btn btn-danger btn-xs" style="float: right;">Delete</button>
+                    </div>
+                    <div style="margin-top: 10px; padding-left: 10px;">
+                        {{message.content}}
+                    </div>
+                </div>
                 {% endfor %}
+                {% else %}
+                <div style="background-color: white; border-radius: 5px; padding: 10px;">
+                    <div class="text-center" style="padding: 15px;">
+                        No Message Available
+                    </div>
+                </div>
+                {% endif %}
             </div>
         </div>
     </div>
