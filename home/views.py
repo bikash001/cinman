@@ -8,6 +8,7 @@ from django.db.models import Count
 import json
 from datetime import datetime
 import subprocess as sb
+from django.core.mail import send_mail
 
 ram_ip = []
 disk_ip = []
@@ -15,6 +16,11 @@ double_login = {}
 
 # def direct(request):
 # 	return redirect('/login')
+
+def sendMail(reques):
+	send_mail('Test', 'hw r u?', 'abc@gmail.com',
+		['xxx@gmail.com'])
+	return HttpResponse('lol', status=200)
 
 def login(request):
 	if request.user.is_authenticated():
@@ -213,10 +219,12 @@ def specificsystemdetails(request,machine_id,info_requested):
 def home(request):
 	if request.user.is_authenticated():
 		userCount = MachineUser.objects.count()
-		machineCount = Machine.objects.count()
+		machines = Machine.objects.all()
+		machineCount = machines.count()
 		userActive = UsersActiveOn.objects.values('username').distinct().count()
 		machineActive = UsersActiveOn.objects.values('machine').distinct().count()
-		
+		ips = {}
+
 		superuser = {}
 		users = []
 		admins = Administrator.objects.all()
