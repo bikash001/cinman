@@ -24,6 +24,8 @@ class Machine(models.Model):
     node_hostname=models.CharField(max_length=30)
     processor=models.CharField(max_length=30)
     kernel_name=models.CharField(max_length=30)
+    ramusagehigh=models.BooleanField(default=False)
+    diskusagehigh=models.BooleanField(default=False)
 
     def __str__(self):
         return self.mac_address
@@ -53,6 +55,7 @@ class MachineUser(models.Model):
 
     def __str__(self):
         return self.username
+
 
 class UsersActiveOn(models.Model):
     username=models.ForeignKey(MachineUser,related_name="active_users")

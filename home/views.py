@@ -10,9 +10,6 @@ from datetime import datetime,timedelta
 from django.utils import timezone
 import subprocess as sb
 
-ram_ip = []
-disk_ip = []
-double_login = {}
 
 # def direct(request):
 # 	return redirect('/login')
@@ -124,6 +121,7 @@ def notifications(request):
 		# print 'hello', userActive[0].username == userActive[1].username
 		# print userActive[0].username, userActive[1].username
 		userActive = UsersActiveOn.objects.order_by('username')
+		print userActive
 		for i in range(len(userActive)):
 			if (prev == userActive[i].username):
 				temp.append(str(userActive[i].machine))
@@ -137,7 +135,7 @@ def notifications(request):
 					# print 'na', userActive[i].username
 					temp = [str(userActive[i].machine)]
 		if len(temp) > 1:
-			obj[str(userActive[-1])] = temp
+			obj[str(userActive.last().username)] = temp
 			# print temp
 		
 		users = {}
@@ -146,6 +144,8 @@ def notifications(request):
 			for x in tempuser:
 				users[str(x.id)] = [str(x.first_name), str(x.last_name), str(x.email), str(x.phone_number)]
 
+		ram_ip=Machine.objects.filter(ramusagehigh=True)
+		disk_ip=Machine.objects.filter(diskusagehigh=True)	
 		context={
 			'ram_ip':ram_ip,
 			'disk_ip':disk_ip,
@@ -252,22 +252,8 @@ def postdata(request):
 	i=Machine(**myDict)
 	available_ram = float(i.ram_available_memory[:-2])
 	total_ram = float(i.ram_total_memory[:-2])
-	if i.mac_address in ram_ip:
-		if available_ram/total_ram > 0.2:
-			ram_ip.remove(i.mac_address)
-	else:
-		if available_ram/total_ram < 0.2:
-			ram_ip.append(i.mac_address)
-
 	available_disk = float(i.disk_available[:-1])
 	total_disk = float(i.disk_size[:-1])
-	if i in disk_ip:
-		if available_disk/total_disk > 0.2:
-			disk_ip.remove(i)
-	else:
-		if available_disk/total_disk < 0.2:
-			disk_ip.append(i)
-
 	try:
 		machine=Machine.objects.get(mac_address=i.mac_address)
 		Machine.objects.filter(mac_address=i.mac_address).update(**myDict)
@@ -275,6 +261,17 @@ def postdata(request):
 	except ObjectDoesNotExist :
 		i.save()
 	machine=Machine.objects.get(mac_address=i.mac_address)
+
+	if(available_ram/total_ram<0.7):
+		Machine.objects.filter(mac_address=i.mac_address).update(ramusagehigh=True)
+	else:	
+		Machine.objects.filter(mac_address=i.mac_address).update(ramusagehigh=False)
+
+	if(available_disk/total_disk<0.7):
+		Machine.objects.filter(mac_address=i.mac_address).update(diskusagehigh=True)
+	else:	
+		Machine.objects.filter(mac_address=i.mac_address).update(diskusagehigh=False)
+
 	for software in softwares:
 		p=Softwaresinstalled(machine=machine,name=software)
 		p.save()	

@@ -13,6 +13,28 @@
 <style>
 .vertical-menu2 {
     /*width: 600px;*/
+    overflow-y: auto;
+    margin-left: 150px;
+    margin-top: 30px;
+}
+.vertical-menu2 a {
+    background-color: #B2BEB5;
+    color: black;
+    display: block;
+    padding: 12px;
+    text-decoration: none;
+}
+
+.vertical-menu2 a:hover {
+    background-color: #ccc;
+}
+
+.vertical-menu2 a.active {
+    background-color: #4CAF50;
+    color: white;
+}
+.vertical-menu3 {
+    /*width: 600px;*/
     height: 80vh;
     overflow-y: auto;
     /*margin-left: 150px;*/
@@ -52,13 +74,15 @@
 	</div>
 	<div class="row">
 		<div class="col-md-12">
-			<div class="vertical-menu2" style="width: 70%; margin:auto;">
+			<div class="vertical-menu2" style="width: 70%">
 				{% for n in ram_ip %}
-					<a href="#">{{n}} exceeded 10% of the Total RAM.</a>
+					<a href="#">Mac address-<b>{{n.mac_address}}</b>,Hostname-<b>{{n.node_hostname}}</b> exceeded 30% of the Total RAM.</a>
 				{% endfor %}
 				{% for n in disk_ip %}
-					<a href="#">{{n}} exceeded 10% of the Total Disk Space.</a>
+					<a href="#">Mac address-<b>{{n.mac_address}}</b>,Hostname-<b>{{n.node_hostname}}</b> exceeded 30% of the Total Disk Space.</a>
 				{% endfor %}
+			</div>
+			<div class="vertical-menu3" style="width: 70%; margin-left:150px;">
 				{% for key,value in double_login.items %}
 					<div class="card pad">User <b>{{key}}</b> is active at following systems.<br>
 						<ul>
@@ -69,6 +93,7 @@
 						<!-- <button class="btn btn-danger" style="margin-top: 5px; width: 50%;">Delete</button> -->
 					</div>
 				{% endfor %}
+
 				{% for key,value in users.items %}
 					<div class="card" id="reg-{{key}}">
 						<div style="padding: 5px 10px 10px;">
