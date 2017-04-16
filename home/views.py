@@ -248,7 +248,6 @@ def home(request):
 @csrf_exempt
 def postdata(request):
 	#CSRF_COOKIE_SECURE=False
-	global ram_ip, disk_ip, double_login
 	request.POST=request.POST.copy()
 	x=request.body
 	myDict = json.loads(x)
@@ -288,9 +287,6 @@ def postdata(request):
 		machine_ac=Machine.objects.get(mac_address=i.mac_address)
 		try:
 			machineuser=MachineUser.objects.get(username=user)
-			flag = UsersActiveOn.objects.filter(username=machineuser)
-			if flag is not None:
-				double_login[machineuser.username]= datetime.now()
 			z=UsersActiveOn(machine=machine_ac,username=machineuser)
 			z.save()
 		except ObjectDoesNotExist :
