@@ -214,19 +214,27 @@ def home(request):
 		machineCount = Machine.objects.count()
 		now = timezone.now()
 		earlier = now - timedelta(minutes=5)
-		actusers = UsersActiveOn.objects.values('username').distinct()
+		actusers = UsersActiveOn.objects.values_list('username').distinct()
 		userActive = len(actusers)
-		macs = UsersActiveOn.objects.values('machine').distinct()
+		macs = UsersActiveOn.objects.values_list('machine').distinct()
 		machineActive = macs.count()
 		machines = Machine.objects.all()
 		ips = []
+		usernames=[]
+		for actuser in actusers:
+			usernames.append(MachineUser.objects.get(id=actuser[0]))
+
+		for mac in macs:
+			ips.append(Machine.objects.get(id=mac[0]))
+
+		#print ips
 		# print macs
 		# for x in macs:
 		# 	print str(x.machine), "hello"
 			# ips.append(machines.get(mac_address=x.))
 		# print users
 		# print macs
-		# for x in macs:
+		# for x in macs
 
 		superuser = {}
 		users = []
@@ -241,7 +249,7 @@ def home(request):
 					'mobile': x.phone_number})
 
 		vals = {'actUsers': userActive, 'actMachines': machineActive, 'machines': machineCount,
-		'usercount': userCount, 'superuser': superuser, 'users': users, 'ips': ips}
+		'usercount': userCount, 'superuser': superuser, 'users': users, 'ips': ips,'activeusers':usernames}
 		return render(request, 'home/home.html', context=vals)
 	else:
 		return redirect('/login')
