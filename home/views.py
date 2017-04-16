@@ -142,12 +142,14 @@ def notifications(request):
 				users[str(x.id)] = [str(x.first_name), str(x.last_name), str(x.email), str(x.phone_number)]
 
 		ram_ip=Machine.objects.filter(ramusagehigh=True)
-		disk_ip=Machine.objects.filter(diskusagehigh=True)	
+		disk_ip=Machine.objects.filter(diskusagehigh=True)
+		peripherals=Peripherals.objects.all()	
 		context={
 			'ram_ip':ram_ip,
 			'disk_ip':disk_ip,
 			'double_login': obj,
-			'users': users
+			'users': users,
+			 'peripherals':peripherals
 		}
 		return render(request, 'home/notifications.html',context)
 	else:

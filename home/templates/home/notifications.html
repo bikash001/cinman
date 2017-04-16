@@ -18,7 +18,6 @@
     margin-top: 30px;
 }
 .vertical-menu2 a {
-    background-color: #B2BEB5;
     color: black;
     display: block;
     padding: 12px;
@@ -74,7 +73,7 @@
 	</div>
 	<div class="row">
 		<div class="col-md-12">
-			<div class="vertical-menu2" style="width: 70%">
+			<div class="vertical-menu2" style="width: 70%;background-color: #B2BEB5;">
 				{% for n in ram_ip %}
 					<a href="#">Mac address-<b>{{n.mac_address}}</b>, Hostname-<b>{{n.node_hostname}}</b> exceeded 30% of the Total RAM.</a>
 				{% endfor %}
@@ -82,6 +81,13 @@
 					<a href="#">Mac address-<b>{{n.mac_address}}</b>, Hostname-<b>{{n.node_hostname}}</b> exceeded 30% of the Total Disk Space.</a>
 				{% endfor %}
 			</div>
+
+			<div class="vertical-menu2" style="width: 70%;background-color:green">
+				{% for n in peripherals %}
+					<a href="#">Device type-{{n.device_type}} with Device number-{{n.device_number}} is connected at {{n.connected}} and disconnected at {{n.disconnected}} on Machine -<b>{{n.machine}}</b> with User -<b>{{n.username}}</b></a>
+				{% endfor %}
+			</div>
+			
 			<div class="vertical-menu3" style="width: 70%; margin-left:150px;">
 				{% for key,value in double_login.items %}
 					<div class="card pad">User <b>{{key}}</b> is active at following systems.<br>
