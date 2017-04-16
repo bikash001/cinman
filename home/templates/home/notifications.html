@@ -76,10 +76,10 @@
 		<div class="col-md-12">
 			<div class="vertical-menu2" style="width: 70%">
 				{% for n in ram_ip %}
-					<a href="#">Mac address-<b>{{n.mac_address}}</b>,Hostname-<b>{{n.node_hostname}}</b> exceeded 30% of the Total RAM.</a>
+					<a href="#">Mac address-<b>{{n.mac_address}}</b>, Hostname-<b>{{n.node_hostname}}</b> exceeded 30% of the Total RAM.</a>
 				{% endfor %}
 				{% for n in disk_ip %}
-					<a href="#">Mac address-<b>{{n.mac_address}}</b>,Hostname-<b>{{n.node_hostname}}</b> exceeded 30% of the Total Disk Space.</a>
+					<a href="#">Mac address-<b>{{n.mac_address}}</b>, Hostname-<b>{{n.node_hostname}}</b> exceeded 30% of the Total Disk Space.</a>
 				{% endfor %}
 			</div>
 			<div class="vertical-menu3" style="width: 70%; margin-left:150px;">

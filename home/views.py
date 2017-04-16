@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import Administrator,Messages,Machine,Softwaresinstalled,MachineUser,UsersActiveOn,Logs,TempUser
+from .models import Administrator,Messages,Machine,Softwaresinstalled,MachineUser,UsersActiveOn,Logs,TempUser,Peripherals
 from django.contrib import auth
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt  
@@ -222,19 +222,27 @@ def home(request):
 		machineCount = Machine.objects.count()
 		now = timezone.now()
 		earlier = now - timedelta(minutes=5)
-		actusers = UsersActiveOn.objects.values('username').distinct()
+		actusers = UsersActiveOn.objects.values_list('username').filter(time__range=(earlier,now)).distinct()
 		userActive = len(actusers)
-		macs = UsersActiveOn.objects.values('machine').distinct()
+		macs = UsersActiveOn.objects.values_list('machine').filter(time__range=(earlier,now)).distinct()
 		machineActive = macs.count()
 		machines = Machine.objects.all()
 		ips = []
+		usernames=[]
+		for actuser in actusers:
+			usernames.append(MachineUser.objects.get(id=actuser[0]))
+
+		for mac in macs:
+			ips.append(Machine.objects.get(id=mac[0]))
+
+		#print ips
 		# print macs
 		# for x in macs:
 		# 	print str(x.machine), "hello"
 			# ips.append(machines.get(mac_address=x.))
 		# print users
 		# print macs
-		# for x in macs:
+		# for x in macs
 
 		superuser = {}
 		users = []
@@ -249,7 +257,7 @@ def home(request):
 					'mobile': x.phone_number})
 
 		vals = {'actUsers': userActive, 'actMachines': machineActive, 'machines': machineCount,
-		'usercount': userCount, 'superuser': superuser, 'users': users, 'ips': ips}
+		'usercount': userCount, 'superuser': superuser, 'users': users, 'ips': ips,'activeusers':usernames}
 		return render(request, 'home/home.html', context=vals)
 	else:
 		return redirect('/login')
@@ -342,6 +350,25 @@ def postlogs(request):
 		i=Logs(machine=machine_mac,content=log)
 		i.save()
 	return HttpResponse("success", content_type="text/plain")
+
+@csrf_exempt
+def postperipherals(request):
+	request.POST=request.POST.copy()
+	x=request.body
+	myDict = json.loads(x)
+	machine_mac=Machine.objects.get(mac_address=myDict['mac_address'])
+	username=MachineUser.objects.get(username=myDict['username'])
+	del myDict['mac_address']
+	del myDict['username']
+	myDict['machine']=machine_mac
+	myDict['username']=username
+	i=Peripherals(**myDict)
+	try:
+		x=Peripherals.objects.get(machine=machine_mac,device_number=myDict['device_number'])
+		Peripherals.objects.filter(machine=machine_mac,device_number=myDict['device_number']).update(disconnected=myDict['disconnected'])
+	except ObjectDoesNotExist:
+		i.save()	
+	return HttpResponse("success", content_type="text/plain")	
 
 def validateUser(request):
 	name = request.POST['uname']
