@@ -14,14 +14,16 @@
 .vertical-menu2 {
     /*width: 600px;*/
     overflow-y: auto;
-    margin-left: 150px;
-    margin-top: 30px;
+    margin: auto;
+    border-radius: 8px;
 }
 .vertical-menu2 a {
     color: black;
     display: block;
     padding: 12px;
+    margin: 10px 0;
     text-decoration: none;
+    border-radius: 8px;
 }
 
 .vertical-menu2 a:hover {
@@ -33,11 +35,10 @@
     color: white;
 }
 .vertical-menu3 {
+	border-radius: 8px;
     /*width: 600px;*/
-    height: 80vh;
-    overflow-y: auto;
     /*margin-left: 150px;*/
-    margin-top: 30px;
+    margin: auto;
 }
 
 .pad{
@@ -48,6 +49,7 @@
 	background-color: #B2BEB5;
     color: black;
     display: block;
+    border-radius: 8px;
     margin-bottom: 10px;
     text-decoration: none;
 }
@@ -72,7 +74,7 @@
 		</div>		
 	</div>
 	<div class="row">
-		<div class="col-md-12">
+		<div class="col-md-12" style="margin: 20px 0; height: 80vh; overflow-y: auto">
 			<div class="vertical-menu2" style="width: 70%;background-color: #B2BEB5;">
 				{% for n in ram_ip %}
 					<a href="#">Mac address-<b>{{n.mac_address}}</b>, Hostname-<b>{{n.node_hostname}}</b> exceeded 30% of the Total RAM.</a>
@@ -88,7 +90,7 @@
 				{% endfor %}
 			</div>
 			
-			<div class="vertical-menu3" style="width: 70%; margin-left:150px;">
+			<div class="vertical-menu3" style="width: 70%;">
 				{% for key,value in double_login.items %}
 					<div class="card pad">User <b>{{key}}</b> is active at following systems.<br>
 						<ul>

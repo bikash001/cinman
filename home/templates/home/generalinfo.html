@@ -118,6 +118,26 @@ td{
               <td>MAC Address</td>
               <td>{{specmachine.mac_address}}</td>
             </tr>
+            
+              <tr>
+              <td>Name of the Kernel</td>
+              <td>{{specmachine.kernel_name}}</td>
+            </tr>
+            <tr>
+              <td>Operating System</td>
+              <td>{{specmachine.operating_system}}</td>
+            </tr>
+            <tr>
+              <td>Kernel Release</td>
+              <td>{{specmachine.kernel_release}}</td>
+            </tr>
+          </table>
+          <h4 style="padding:15px 0 10px 0;"><b>Hardware Information:</b></h4>
+          <table class="hardware_table">
+            <tr>
+              <td>Hardware Platform</td>
+              <td>{{specmachine.hardware_platform}}</td>
+            </tr>
             <tr>
               <td>Available RAM</td>
               <td>{{specmachine.ram_available_memory}}</td>
@@ -131,27 +151,12 @@ td{
               <td>{{specmachine.disk_available}}</td>
             </tr>
             <tr>
-              <td>Used Disk Space</td>
-              <td>{{specmachine.disk_used}}</td>
-            </tr>
-            <tr>
               <td>Total Disk Space</td>
               <td>{{specmachine.disk_size}}</td>
             </tr>
-          </table>
-          <h4 style="padding:15px 0 10px 0;"><b>Hardware Information:</b></h4>
-          <table class="hardware_table">
             <tr>
-              <td>Hardware Platform</td>
-              <td>{{specmachine.hardware_platform}}</td>
-            </tr>
-            <tr>
-              <td>Kernel Release</td>
-              <td>{{specmachine.kernel_release}}</td>
-            </tr>
-            <tr>
-              <td>Operating System</td>
-              <td>{{specmachine.operating_system}}</td>
+              <td>Used Disk Space</td>
+              <td>{{specmachine.disk_used}}</td>
             </tr>
             <tr>
               <td>Hardware of Machine</td>
@@ -161,14 +166,12 @@ td{
               <td>Hostname of Node</td>
               <td>{{specmachine.node_hostname}}</td>
             </tr>
-            <tr>
-              <td>Processor</td>
-              <td>{{specmachine.processor}}</td>
+           <tr>
+              <td>Cache Size</td>
+              <td>{{specmachine.cache_size}}</td>
             </tr>
-            <tr>
-              <td>Name of the Kernel</td>
-              <td>{{specmachine.kernel_name}}</td>
-            </tr>
+            
+          
           </table>
         </div>
         <div class="col-md-6">
@@ -194,9 +197,9 @@ td{
               <td>Vendor ID</td>
               <td>{{specmachine.vendor_id}}</td>
             </tr>
-            <tr>
-              <td>Cache Size</td>
-              <td>{{specmachine.cache_size}}</td>
+             <tr>
+              <td>Processor</td>
+              <td>{{specmachine.processor}}</td>
             </tr>
           </table>
         </div>
