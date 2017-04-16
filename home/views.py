@@ -214,9 +214,9 @@ def home(request):
 		machineCount = Machine.objects.count()
 		now = timezone.now()
 		earlier = now - timedelta(minutes=5)
-		actusers = UsersActiveOn.objects.values_list('username').distinct()
+		actusers = UsersActiveOn.objects.values_list('username').filter(time__range=(earlier,now)).distinct()
 		userActive = len(actusers)
-		macs = UsersActiveOn.objects.values_list('machine').distinct()
+		macs = UsersActiveOn.objects.values_list('machine').filter(time__range=(earlier,now)).distinct()
 		machineActive = macs.count()
 		machines = Machine.objects.all()
 		ips = []
