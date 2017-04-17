@@ -9,10 +9,12 @@ $(document).ready(function() {
 				'X-CSRFToken': token
 			},
 			error: function(rsp) {
+				$('.progress').addClass('hide');
 				console.log('error');
 				console.log(rsp);
 			},
 			success: function(rsp) {
+				$('.progress').addClass('hide');
 				console.log('success');
 				console.log(rsp);
 			},
@@ -37,6 +39,7 @@ $(document).ready(function() {
 	};
 
 	$('#refresh').click(function(){
+		$('.progress').removeClass('hide');
 		ajaxCall();
 	});
 });

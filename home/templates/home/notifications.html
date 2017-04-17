@@ -86,7 +86,11 @@
 
 			<div class="vertical-menu2" style="width: 70%;background-color:green">
 				{% for n in peripherals %}
-					<a href="#">Device type-{{n.device_type}} with Device number-{{n.device_number}} is connected at {{n.connected}} and disconnected at {{n.disconnected}} on Machine -<b>{{n.machine}}</b> with User -<b>{{n.username}}</b></a>
+					<div id="ppp-{{n.id}}" class="card text-center">
+					<div>Device type-{{n.device_type}} with Device number-{{n.device_number}} is connected at {{n.connected}} and disconnected at {{n.disconnected}} on Machine -<b>{{n.machine}}</b> with User -<b>{{n.username}}</b>
+					</div>
+					<button id="pp-{{n.id}}" class="ppp btn btn-danger">Delete</button>
+					</div>
 				{% endfor %}
 			</div>
 			
@@ -115,7 +119,7 @@
 							<button id="apv-{{key}}" class="btn btn-success" style="margin-top: 5px; width: 100%; ">Accept</button>
 							</div>
 							<div class="col-md-6"  style="padding: 0;">
-							<button id="dec-{{key}}" class="btn btn-danger" style="margin-top: 5px; width: 100%; ">Reject</button>
+							<button id="dec-{{key}}" class="userreg btn btn-danger" style="margin-top: 5px; width: 100%; ">Reject</button>
 							</div>
 						</div>
 					</div>
