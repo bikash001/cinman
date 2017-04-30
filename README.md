@@ -6,8 +6,10 @@
 **Client**
 1. install python-2.5 or above
 2. extract client.tar.gz contained in the root directory \(cinman\)
-3. enter python cinmantest.py to run the client
-4. whenever required enter python message.py to run messaging client to send messages to administrator
+3. change the server address in file daemon.py and devices.py
+4. enter python daemon.py
+5. enter python devices.py
+6. whenever required enter python message.py to run messaging client to send messages to administrator
 
 **Server**
 1. install postgresql
