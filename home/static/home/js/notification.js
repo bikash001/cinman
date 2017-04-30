@@ -1,6 +1,6 @@
 $(document).ready(function() {
 	
-	var urls = ['/approve_user','/decline_user']
+	var urls = ['/approve_user','/decline_user', '/delete_pp']
 	
 	var ajaxCall = function(arg, id) {
 		var token = getCookie();
@@ -47,9 +47,14 @@ $(document).ready(function() {
 		$('#reg-'+id).remove();
 	});
 
-	$('.btn-danger').click(function(){
+	$('.userreg').click(function(){
 		var id = this.id.split('-')[1];
 		ajaxCall(1,id);
 		$('#reg-'+id).remove();
+	});
+	$('.ppp').click(function(){
+		var id = this.id.split('-')[1];
+		ajaxCall(2,id);
+		$('#ppp-'+id).remove();
 	});
 });

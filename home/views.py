@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import Administrator,Messages,Machine,Softwaresinstalled,MachineUser,UsersActiveOn,Logs,TempUser,Peripherals
+from .models import Administrator,Messages,Machine,Softwaresinstalled,MachineUser,UsersActiveOn,Logs,TempUser,Peripherals, ForgotUrls
 from django.contrib import auth
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt  
@@ -10,7 +10,14 @@ from datetime import datetime,timedelta
 from django.utils import timezone
 import subprocess as sb
 from django.core.mail import send_mail
+import hashlib
 
+def delete_pp(request):
+	if request.user.is_authenticated():
+		Peripherals.objects.filter(id=request.POST['id']).delete()
+		return HttpResponse('deleted', status=200)
+	else:
+		return HttpResponse('unauthorised', status=403)
 
 def delete_msg(request):
 	if request.user.is_authenticated():
@@ -19,6 +26,15 @@ def delete_msg(request):
 	else:
 		return HttpResponse('unauthorised', status=403)
 	
+def change_password(request, url):
+	try:
+		data = ForgotUrls.objects.get(password_url=url)
+		if data:
+			pass
+	except Exception as e:
+		pass
+	return HttpResponse('done', status=200)
+
 def sendMail(request):
 	send_mail('Test', 'hw r u?', 'abc@gmail.com',
 		['xxx@gmail.com'])
@@ -51,13 +67,24 @@ def approve_user_registration(request):
 			email=udetails.email, first_name=udetails.first_name, last_name=udetails.last_name,
 			password=udetails.password)
 		udetails.delete()
+		try:
+			send_mail('CINMan Registration', 'Your account has been created successfully.', 'help.cinman@gmail.com',
+				[user.email])
+		except Exception as e:
+			pass
 		return HttpResponse('successfully registered', status=202)
 	else:
 		return HttpResponse('you are not logged in', status=403)
 
 def decline_user_registration(request):
 	if request.user.is_authenticated()  and request.user.is_superuser:
-		TempUser.objects.filter(id=request.POST['id']).delete()
+		user = TempUser.objects.filter(id=request.POST['id'])
+		try:
+			send_mail('CINMan Registration', 'Your account cannot be created due to approval issue. Please contact administrator personally.', 'help.cinman@gmail.com',
+				[user.email])
+		except Exception as e:
+			pass
+		user.delete()
 		return HttpResponse('deleted', status=200)
 	else:
 		return HttpResponse('you are not logged in', status=403)
@@ -66,14 +93,15 @@ def current_status(request):
 	if request.user.is_authenticated():
 		ipList = Machine.objects.values_list('ip_address', flat=True)
 		print ipList
-		obj = {}
+		machines = []
+		users = []
 		for ip in ipList:
 			try:
 				ret = sb.check_output(['ping','-c 5','-f','-i 0.2', ip])
-				obj[ip] = 1
+				machines.append(ip)
 			except Exception as e:
-				obj[ip] = 0
-		return JsonResponse(obj)
+				pass
+		return JsonResponse({'ips': machines, 'users': users})
 	else:
 		return HttpResponse('you are not logged in', status=403)
 
@@ -85,6 +113,12 @@ def forgot(request):
 		pass
 
 	if user != None and user['email'] == request.POST['email']:
+
+		try:
+			send_mail('Change Password', 'Please go to the below link to change the password.', 'help.cinman@gmail.com',
+				[user.email])
+		except Exception as e:
+			pass
 		return HttpResponse("new password will be set", status=202)
 	else:
 		return HttpResponse("user does not exist.", status=403)
@@ -126,7 +160,7 @@ def notifications(request):
 		# print 'hello', userActive[0].username == userActive[1].username
 		# print userActive[0].username, userActive[1].username
 		userActive = UsersActiveOn.objects.order_by('username')
-		print userActive
+		# print userActive
 		for i in range(len(userActive)):
 			if (prev == userActive[i].username):
 				temp.append(str(userActive[i].machine))

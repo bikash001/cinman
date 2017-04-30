@@ -77,22 +77,26 @@
 		<div class="col-md-12" style="margin: 20px 0; height: 80vh; overflow-y: auto">
 			<div class="vertical-menu2" style="width: 70%;background-color: #B2BEB5;">
 				{% for n in ram_ip %}
-					<a href="#">Mac address-<b>{{n.mac_address}}</b>, Hostname-<b>{{n.node_hostname}}</b> exceeded 30% of the Total RAM.</a>
+					<div style="padding: 10px; margin: 10px 0 0;"> Mac address-<b>{{n.mac_address}}</b>, Hostname-<b>{{n.node_hostname}}</b> exceeded 30% of the Total RAM.</div>
 				{% endfor %}
 				{% for n in disk_ip %}
-					<a href="#">Mac address-<b>{{n.mac_address}}</b>, Hostname-<b>{{n.node_hostname}}</b> exceeded 30% of the Total Disk Space.</a>
+					<div style="padding: 10px; margin: 10px 0 0;">Mac address-<b>{{n.mac_address}}</b>, Hostname-<b>{{n.node_hostname}}</b> exceeded 30% of the Total Disk Space.</div>
 				{% endfor %}
 			</div>
 
-			<div class="vertical-menu2" style="width: 70%;background-color:green">
+			<div class="vertical-menu2" style="width: 70%;">
 				{% for n in peripherals %}
-					<a href="#">Device type-{{n.device_type}} with Device number-{{n.device_number}} is connected at {{n.connected}} and disconnected at {{n.disconnected}} on Machine -<b>{{n.machine}}</b> with User -<b>{{n.username}}</b></a>
+					<div style="padding: 10px; margin: 10px 0 0;" id="ppp-{{n.id}}" class="card text-center">
+					<div>Device type-{{n.device_type}} with Device number-{{n.device_number}} is connected at {{n.connected}} and disconnected at {{n.disconnected}} on Machine -<b>{{n.machine}}</b> with User -<b>{{n.username}}</b>
+					</div>
+					<button style="margin-top: 10px;" id="pp-{{n.id}}" class="ppp btn btn-danger">Delete</button>
+					</div>
 				{% endfor %}
 			</div>
 			
 			<div class="vertical-menu3" style="width: 70%;">
 				{% for key,value in double_login.items %}
-					<div class="card pad">User <b>{{key}}</b> is active at following systems.<br>
+					<div style="margin-top: 10px;" class="card pad">User <b>{{key}}</b> is active at following systems.<br>
 						<ul>
 						{% for i in value %} 
 							<li>{{i}}</li>
@@ -115,7 +119,7 @@
 							<button id="apv-{{key}}" class="btn btn-success" style="margin-top: 5px; width: 100%; ">Accept</button>
 							</div>
 							<div class="col-md-6"  style="padding: 0;">
-							<button id="dec-{{key}}" class="btn btn-danger" style="margin-top: 5px; width: 100%; ">Reject</button>
+							<button id="dec-{{key}}" class="userreg btn btn-danger" style="margin-top: 5px; width: 100%; ">Reject</button>
 							</div>
 						</div>
 					</div>

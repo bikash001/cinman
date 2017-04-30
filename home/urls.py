@@ -25,4 +25,6 @@ urlpatterns = [
     url(r'^current_status$', views.current_status),
     url(r'^send_mail$',views.sendMail),
     url(r'^delete_msg$',views.delete_msg),
+    url(r'^change_pwd/(?P<url>[0-9a-fA-F]+)/$', views.change_password),
+    url(r'^delete_pp$', views.delete_pp),
 ]

@@ -47,6 +47,11 @@ class MachineUser(models.Model):
     def __str__(self):
         return self.username
 
+class ForgotUrls(models.Model):
+    password_url = models.CharField(max_length=56)
+    user=models.ForeignKey(MachineUser, null=False, blank=False, related_name="change_pwd_url",on_delete=models.CASCADE)
+
+
 class Peripherals(models.Model):
     machine = models.ForeignKey(Machine, null=False, blank=False, related_name="peripherals",on_delete=models.CASCADE)
     username=models.ForeignKey(MachineUser, null=False, blank=False, related_name="peripherals_user",on_delete=models.CASCADE)
